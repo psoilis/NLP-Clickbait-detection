@@ -3,12 +3,11 @@ import json_lines
 from features import AbuserDetectionFeatures as adf
 from features import ImageFeatures as imf
 from features import LinguisticAnalysisFeatures as laf
-from utils import Utils
+from utils import utils
 
 image_features = imf.ImageFeatures()
 linguistic_features = laf.LinguisticAnalysisFeatures()
 abuser_features = adf.AbuserDetectionFeatures()
-utils = Utils.Utils()
 
 with open('dataset/instances.jsonl', 'rb') as f:
     for post in json_lines.reader(f):
