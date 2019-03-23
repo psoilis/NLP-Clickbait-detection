@@ -65,6 +65,39 @@ def test_functions():
     print("Words = ", words)
     words = utils.words(["I am", "You are a prick", "yolo"])
     print("Words = ", words)
+
+    # get_no_of_characters_features tests
+    test_dict = {
+        # TODO: add ocr image field
+        "postText": "Check dis car",   # chars 13, words 3
+        "targetTitle": "Mustang",   # chars 7, words 1
+        "targetDescription": "Mustang GT",  # chars 10, words 2
+        "targetKeywords": "keyword1,keyword2",  # average 8, words 1
+        "targetCaptions": ["Caption len 14", "Length 8"],  # average 11, words 2.5
+        "targetParagraphs": ["This is a paragraph with length 34", "Another with length 22"]   # average 28, words 5.5
+    }
+    test_dict_empty = {
+        # TODO: add ocr image field
+        "postText": "",
+        "targetTitle": "",
+        "targetDescription": "",
+        "targetKeywords": "",
+        "targetCaptions": [],
+        "targetParagraphs": []
+    }
+    features = linguistic_features.get_no_of_characters_features(test_dict)
+    print("No of chars features: ", features)
+    features = linguistic_features.get_no_of_characters_features(test_dict_empty)
+    print("No of chars features (empty): ", features)
+    features = linguistic_features.get_no_of_words_features(test_dict)
+    print("No of words features: ", features)
+    features = linguistic_features.get_no_of_words_features(test_dict_empty)
+    print("No of words features (empty): ", features)
+    features = linguistic_features.get_diff_between_no_of_words_features(test_dict)
+    print("Diff of no of words features: ", features)
+    features = linguistic_features.get_diff_between_no_of_words_features(test_dict_empty)
+    # TODO: this doesn't seem right (-1 adds +1 to the difference)
+    print("Diff of no of words features: (empty) ", features)
     print("========================================================================")
 
 

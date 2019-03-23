@@ -23,7 +23,11 @@ def description(post):
 
 def keywords(post):
     # returns the target article's keywords
-    return post["targetKeywords"].split(",")
+    k_words = post["targetKeywords"]
+    if len(k_words) == 0:
+        return []
+    else:
+        return k_words.split(",")
 
 
 def paragraphs(post):
@@ -72,6 +76,7 @@ def len_words(content):
 
 
 def words(content):
+    # returns the content's words
     words_lst = []
     if isinstance(content, list):
         # list case
