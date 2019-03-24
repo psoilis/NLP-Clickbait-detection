@@ -41,7 +41,10 @@ class LinguisticAnalysisFeatures:
         features_lst = []
         for i in range(len(lst)):
             for j in range(i + 1, len(lst)):
-                features_lst.append(abs(lst[i] - lst[j]))
+                if lst[i] != -1 and lst[j] != -1:
+                    features_lst.append(abs(lst[i] - lst[j]))
+                else:
+                    features_lst.append(-1)
 
         return features_lst
 
@@ -83,7 +86,10 @@ class LinguisticAnalysisFeatures:
         features_lst = []
         for i in range(len(lst)):
             for j in range(i + 1, len(lst)):
-                features_lst.append(abs(lst[i] - lst[j]))
+                if lst[i] != -1 and lst[j] != -1:
+                    features_lst.append(abs(lst[i] - lst[j]))
+                else:
+                    features_lst.append(-1)
 
         return features_lst
 
