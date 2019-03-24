@@ -38,18 +38,29 @@ class LinguisticAnalysisFeatures:
         lst = [post_title_len, ocr_text_len, article_title_len, article_desc_len, article_keywords_len,
                article_paragraphs_len, article_captions_len]
 
-        features_lst = []
-        for i in range(len(lst)):
-            for j in range(i + 1, len(lst)):
-                if lst[i] != -1 and lst[j] != -1:
-                    features_lst.append(abs(lst[i] - lst[j]))
-                else:
-                    features_lst.append(-1)
-
+        features_lst = self.getDifferenceFeaturesList(lst)
         return features_lst
 
+    # TODO: Should we include the other way around?
     def get_no_of_characters_ratio_features(self, post):
-        print("fix")
+        """
+        Calculates the "Number of characters ratio". 21 features
+        are calculated in total
+        :return: a list that contains the features
+        """
+        post_title_len = utils.len_characters(utils.title(post))
+        ocr_text_len = utils.len_characters(utils.ocr(post))
+        article_title_len = utils.len_characters(utils.article(post))
+        article_desc_len = utils.len_characters(utils.description(post))
+        article_keywords_len = utils.len_characters(utils.keywords(post))
+        article_paragraphs_len = utils.len_characters(utils.paragraphs(post))
+        article_captions_len = utils.len_characters(utils.captions(post))
+
+        lst = [post_title_len, ocr_text_len, article_title_len, article_desc_len, article_keywords_len,
+               article_paragraphs_len, article_captions_len]
+
+        features_lst = self.getRatioFeaturesList(lst)
+        return features_lst
 
     def get_no_of_words_features(self, post):
         """
@@ -83,18 +94,29 @@ class LinguisticAnalysisFeatures:
         lst = [post_title_len, ocr_text_len, article_title_len, article_desc_len, article_keywords_len,
                article_paragraphs_len, article_captions_len]
 
-        features_lst = []
-        for i in range(len(lst)):
-            for j in range(i + 1, len(lst)):
-                if lst[i] != -1 and lst[j] != -1:
-                    features_lst.append(abs(lst[i] - lst[j]))
-                else:
-                    features_lst.append(-1)
-
+        features_lst = self.getDifferenceFeaturesList(lst)
         return features_lst
 
+    # TODO: Should we include the other way around?
     def get_no_of_words_ratio_features(self, post):
-        print("fix")
+        """
+        Calculates the "Number of words ratio". 21 features
+        are calculated in total
+        :return: a list that contains the features
+        """
+        post_title_len = utils.len_words(utils.title(post))
+        ocr_text_len = utils.len_words(utils.ocr(post))
+        article_title_len = utils.len_words(utils.article(post))
+        article_desc_len = utils.len_words(utils.description(post))
+        article_keywords_len = utils.len_words(utils.keywords(post))
+        article_paragraphs_len = utils.len_words(utils.paragraphs(post))
+        article_captions_len = utils.len_words(utils.captions(post))
+
+        lst = [post_title_len, ocr_text_len, article_title_len, article_desc_len, article_keywords_len,
+               article_paragraphs_len, article_captions_len]
+
+        features_lst = self.getRatioFeaturesList(lst)
+        return features_lst
 
     def get_common_words_features(self, post):
         print("fix")
@@ -104,3 +126,23 @@ class LinguisticAnalysisFeatures:
 
     def get_formal_informal_words_ratio_features(self, post):
         print("fix")
+
+    def getDifferenceFeaturesList(self, lst):
+        features_lst = []
+        for i in range(len(lst)):
+            for j in range(i + 1, len(lst)):
+                if lst[i] != -1 and lst[j] != -1:
+                    features_lst.append(abs(lst[i] - lst[j]))
+                else:
+                    features_lst.append(-1)
+        return features_lst
+
+    def getRatioFeaturesList(self, lst):
+        features_lst = []
+        for i in range(len(lst)):
+            for j in range(i + 1, len(lst)):
+                if lst[i] != -1 and lst[j] != -1:
+                    features_lst.append(abs(float(lst[i]) / lst[j]))
+                else:
+                    features_lst.append(-1)
+        return features_lst
