@@ -1,19 +1,28 @@
 def img(post):
-    return "fix"
+    from PIL import Image
+
+    pm = post["postMedia"]
+
+    if pm is None:
+        return None
+    else:
+        return Image.open(pm)
 
 
 def ocr(post):
-    return "fix"
+    import pytesseract
+
+    im = img(post)
+
+    if im is None:
+        return None
+    else:
+        return pytesseract.image_to_string(im, lang='eng')
 
 
 def title(post):
     # returns the post's title
     return post["postText"]
-
-
-def timestamp(post):
-    # returns the post's timestamp
-    return post["postTimestamp"]
 
 
 def article(post):
@@ -96,8 +105,30 @@ def words(content):
 
 
 def lang_dict_formal(content):
-    return "fix"
+    from PyDictionary import PyDictionary
+
+    wo = words(content)
+    dictionary = PyDictionary()
+
+    formal = []
+
+    for w in wo:
+        if dictionary.meaning(w) is not None:
+            formal.append(w)
+
+    return formal
 
 
 def lang_dict_informal(content):
-    return "fix"
+    from PyDictionary import PyDictionary
+
+    wo = words(content)
+    dictionary = PyDictionary()
+
+    informal = []
+
+    for w in wo:
+        if dictionary.meaning(w) is None:
+            informal.append(w)
+
+    return informal

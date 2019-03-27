@@ -4,3 +4,6 @@ dataset/*
 __pycache__/
 features/__pycache__/
 utils/__pycache__/
+.pytest_cache
+media/
+data.json
