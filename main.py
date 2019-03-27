@@ -1,5 +1,6 @@
 import json
 import json_lines
+from datetime import datetime
 from features import AbuserDetectionFeatures as adf
 from features import ImageFeatures as imf
 from features import LinguisticAnalysisFeatures as laf
@@ -9,17 +10,8 @@ image_features = imf.ImageFeatures()
 linguistic_features = laf.LinguisticAnalysisFeatures()
 abuser_features = adf.AbuserDetectionFeatures()
 
-with open('dataset/instances.jsonl', 'rb') as f:
-    for post in json_lines.reader(f):
-        print(post)
-        print()
-
-        # TODO: call adf, imf, laf methods in order to extract the features
-        break  # TODO: remove me
-
-
 ##### TESTS #####
-def test_functions():
+def test_functions(post):
     post = '{"id":"608310377143799810",' \
            '"postTimestamp":"Tue Jun 09 16:31:10 +0000 2015",' \
            '"postText":["Apple\'s iOS 9 \'App thinning\' feature will give your phone\'s storage a boost"],' \
@@ -99,6 +91,51 @@ def test_functions():
     # TODO: this doesn't seem right (-1 adds +1 to the difference)
     print("Diff of no of words features: (empty) ", features)
     print("========================================================================")
+	
+	# print(post)
+    # Activity Based Characteristics
+    post_title = utils.title(post)
+    print("Post title: ", post_title)
+    post_title_signs = abuser_features.get_no_signs(post_title)
+    print("Post title @ Signs: ", post_title_signs)
+    post_title_hashtags = abuser_features.get_no_hashtags(post_title)
+    print("Post title # Hashtags: ", post_title_hashtags)
+    post_title_punctuation = abuser_features.get_no_punctuation(post_title)
+    print("Post title Punctuation: ", post_title_punctuation)
+    article_paragraphs = utils.paragraphs(post)
+    print("Article paragraphs: ", article_paragraphs)
+    article_paragraphs_signs = abuser_features.get_no_signs(article_paragraphs)
+    print("Article paragraphs @ Signs: ", article_paragraphs_signs)
+    article_paragraphs_hashtags = abuser_features.get_no_hashtags(article_paragraphs)
+    print("Article paragraphs # Hashtags: ", article_paragraphs_hashtags)
+    article_paragraphs_punctuation = abuser_features.get_no_punctuation(post_title)
+    print("Article paragraphs Punctuation: ", article_paragraphs_punctuation)
+    # Article Properties
+    article_keywords = utils.keywords(post)
+    print("Article Keywords: ", article_keywords)
+    article_keywords_count = abuser_features.get_no_keywords(article_keywords)
+    print("Article keyword count: ", article_keywords_count)
+    article_paragraphs = utils.paragraphs(post)
+    print("Article paragraphs: ", article_paragraphs)
+    article_paragraphs_count = abuser_features.get_no_paragraphs(article_paragraphs)
+    print("Article paragraph count: ", article_paragraphs_count)
+    article_captions = utils.captions(post)
+    print("Article captions: ", article_captions)
+    article_captions_count = abuser_features.get_no_captions(article_captions)
+    print("Article paragraph count: ", article_captions_count)
+    ## Post Longevity
+    post_timestamp = datetime.strptime(utils.timestamp(post), '%a %b %d %H:%M:%S %z %Y')
+    print("Post timestamp: ", post_timestamp)
+    # post_longevity = abuser_features.get_post_longevity(post_timestamp)
+    # print("Post longevity in minutes: ", post_longevity)
+    post_creation_slot = abuser_features.get_post_creation_hour(post_timestamp)
+    print("Post Creation slot: ", post_creation_slot)
 
 
-test_functions()
+count = 0  # number of posts/articles to process
+with open('dataset/instances.jsonl', 'rb') as f:
+    for post in json_lines.reader(f):
+        count += 1
+        test_functions(post)
+        if count == 10:
+            break
