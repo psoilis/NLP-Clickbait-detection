@@ -88,7 +88,6 @@ def test_functions(post):
     features = linguistic_features.get_diff_between_no_of_words_features(test_dict)
     print("Diff of no of words features: ", features)
     features = linguistic_features.get_diff_between_no_of_words_features(test_dict_empty)
-    # TODO: this doesn't seem right (-1 adds +1 to the difference)
     print("Diff of no of words features: (empty) ", features)
     print("========================================================================")
 	
