@@ -132,3 +132,36 @@ def lang_dict_informal(content):
             informal.append(w)
 
     return informal
+
+
+def determiners_possessives_bool(content):
+
+    from nltk import word_tokenize, pos_tag
+
+    text = ""
+
+    if isinstance(content, list):
+        for t in content:
+            text += t + " "
+    else:
+        text = content
+
+    tagged_tokens = pos_tag(word_tokenize(text))
+
+    d_flag = False
+    p_flag = False
+
+    for t in tagged_tokens:
+
+        if d_flag and p_flag:
+            # Early termination
+            break
+
+        if t[1] == "DT":
+            # determiner
+            d_flag = True
+        elif t[1] == "PRP$":
+            # possessives
+            p_flag = True
+
+    return d_flag, p_flag

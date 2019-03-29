@@ -176,3 +176,10 @@ class LinguisticAnalysisFeatures:
                 else:
                     features_lst.append(-1)
         return features_lst
+
+    def get_det_poses(self, post, comp):
+
+        from utils.utils import determiners_possessives_bool
+        # TODO: modular? or for all example for title bellow
+        if comp == "title":
+            return determiners_possessives_bool(utils.title(post))
