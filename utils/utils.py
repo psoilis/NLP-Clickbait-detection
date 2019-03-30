@@ -25,6 +25,11 @@ def title(post):
     return post["postText"]
 
 
+def timestamp(post):
+    # returns the post's timestamp
+    return post["postTimestamp"]
+
+
 def article(post):
     # returns the article's title
     return post["targetTitle"]
