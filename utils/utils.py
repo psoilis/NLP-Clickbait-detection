@@ -1,5 +1,10 @@
+import pytesseract
+from PIL import Image
+from PyDictionary import PyDictionary
+from nltk import word_tokenize, pos_tag
+
+
 def img(post):
-    from PIL import Image
 
     pm = post["postMedia"]
 
@@ -10,7 +15,6 @@ def img(post):
 
 
 def ocr(post):
-    import pytesseract
 
     im = img(post)
 
@@ -110,7 +114,6 @@ def words(content):
 
 
 def lang_dict_formal(content):
-    from PyDictionary import PyDictionary
 
     wo = words(content)
     dictionary = PyDictionary()
@@ -125,7 +128,6 @@ def lang_dict_formal(content):
 
 
 def lang_dict_informal(content):
-    from PyDictionary import PyDictionary
 
     wo = words(content)
     dictionary = PyDictionary()
@@ -140,8 +142,6 @@ def lang_dict_informal(content):
 
 
 def determiners_possessives_bool(content):
-
-    from nltk import word_tokenize, pos_tag
 
     text = ""
 
@@ -170,3 +170,4 @@ def determiners_possessives_bool(content):
             p_flag = True
 
     return d_flag, p_flag
+
