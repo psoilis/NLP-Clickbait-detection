@@ -14,16 +14,6 @@ def img(post):
         return Image.open(pm)
 
 
-def ocr(post):
-
-    im = img(post)
-
-    if im is None:
-        return None
-    else:
-        return pytesseract.image_to_string(im, lang='eng')
-
-
 def title(post):
     # returns the post's title
     return post["postText"]

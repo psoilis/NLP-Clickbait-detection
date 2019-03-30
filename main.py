@@ -60,8 +60,8 @@ def test_functions(post):
 
     # get_no_of_characters_features tests
     test_dict = {
-        # TODO: add ocr image field
         "postText": "Check dis car",   # chars 13, words 3
+        "postMedia": "",
         "targetTitle": "Mustang",   # chars 7, words 1
         "targetDescription": "Mustang GT",  # chars 10, words 2
         "targetKeywords": "keyword1,keyword2",  # average 8, words 1
@@ -69,8 +69,8 @@ def test_functions(post):
         "targetParagraphs": ["This is a paragraph with length 34", "Another with length 22"]   # average 28, words 5.5
     }
     test_dict_empty = {
-        # TODO: add ocr image field
         "postText": "",
+        "postMedia": "",
         "targetTitle": "",
         "targetDescription": "",
         "targetKeywords": "",
@@ -130,11 +130,34 @@ def test_functions(post):
     post_creation_slot = abuser_features.get_post_creation_hour(post_timestamp)
     print("Post Creation slot: ", post_creation_slot)
 
+    # common phrases test
+    test_dict = {
+        "postText": "Check dis car",
+    }
+    test_dict_clicbait = {
+        "postText": "Can't Even Handle this workout!",
+    }
+    clickbait_feat = linguistic_features.get_common_clickbait_phrases_feature(test_dict)
+    print("Clickbait phrase: ", clickbait_feat)
+    clickbait_feat = linguistic_features.get_common_clickbait_phrases_feature(test_dict_clicbait)
+    print("Clickbait phrase: ", clickbait_feat)
+
+    # slang abbreviations test
+    test_dict = {
+        "postText": "yes, you won't believe",
+    }
+    test_dict_slang = {
+        "postText": "lOl, you won't believe",
+    }
+    slang_feat = linguistic_features.get_slang_words_feature(test_dict)
+    print("Slang feat: ", slang_feat)
+    slang_feat = linguistic_features.get_slang_words_feature(test_dict_slang)
+    print("Slang feat: ", slang_feat)
 
 count = 0  # number of posts/articles to process
 with open('dataset/instances.jsonl', 'rb') as f:
     for post in json_lines.reader(f):
         count += 1
         test_functions(post)
-        if count == 10:
+        if count == 1:
             break

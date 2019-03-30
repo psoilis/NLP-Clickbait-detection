@@ -15,12 +15,3 @@ class ImageFeatures:
             return 0
         else:
             return 1
-
-    def text_in_image(self, post):
-
-        text = utils.ocr(post)
-
-        if text is None:
-            return 0
-        else:
-            return 1
