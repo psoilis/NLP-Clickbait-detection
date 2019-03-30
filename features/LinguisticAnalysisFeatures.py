@@ -220,3 +220,8 @@ class LinguisticAnalysisFeatures:
 
     def get_title_patterns(self, post):
         return utils.article_title_patterns(utils.article(post))
+
+    def get_POS_counts(self, post):
+        return utils.POS_counts(utils.article(post))
+
+

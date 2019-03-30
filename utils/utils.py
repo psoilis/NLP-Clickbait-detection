@@ -2,7 +2,7 @@ import pytesseract
 from PIL import Image
 from PyDictionary import PyDictionary
 from nltk import word_tokenize, pos_tag
-
+from collections import Counter
 
 def img(post):
 
@@ -189,3 +189,21 @@ def article_title_patterns(text):
             nnpt = True
 
     return nnpv, nnpt
+
+
+def POS_counts(text):
+
+    cdict = {"NNP": 0, "IN": 0, "WRB": 0, "NN": 0, "PRP": 0, "VBZ": 0,
+             "WP": 0, "DT": 0, "POS": 0, "WDT": 0, "RB": 0, "RBS": 0, "VBN": 0}
+
+    counter = dict(Counter(tag for word, tag in pos_tag(word_tokenize(text))))
+
+    # keep only the relevant tags that we need the counts from
+    for key in [key for key in counter if not key.isalpha() or key not in cdict.keys()]:
+        del counter[key]
+
+    cdict.update(counter)
+
+    return cdict
+
+
