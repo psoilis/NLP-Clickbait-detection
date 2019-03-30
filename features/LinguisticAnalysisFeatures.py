@@ -39,7 +39,7 @@ class LinguisticAnalysisFeatures:
         lst = [post_title_len, ocr_text_len, article_title_len, article_desc_len, article_keywords_len,
                article_paragraphs_len, article_captions_len]
 
-        features_lst = self.getDifferenceFeaturesList(lst)
+        features_lst = self.get_difference_features_list(lst)
         return features_lst
 
     # TODO: Should we include the other way around?
@@ -60,7 +60,7 @@ class LinguisticAnalysisFeatures:
         lst = [post_title_len, ocr_text_len, article_title_len, article_desc_len, article_keywords_len,
                article_paragraphs_len, article_captions_len]
 
-        features_lst = self.getRatioFeaturesList(lst)
+        features_lst = self.get_ratio_features_list(lst)
         return features_lst
 
     def get_no_of_words_features(self, post):
@@ -95,7 +95,7 @@ class LinguisticAnalysisFeatures:
         lst = [post_title_len, ocr_text_len, article_title_len, article_desc_len, article_keywords_len,
                article_paragraphs_len, article_captions_len]
 
-        features_lst = self.getDifferenceFeaturesList(lst)
+        features_lst = self.get_difference_features_list(lst)
         return features_lst
 
     # TODO: Should we include the other way around?
@@ -116,7 +116,7 @@ class LinguisticAnalysisFeatures:
         lst = [post_title_len, ocr_text_len, article_title_len, article_desc_len, article_keywords_len,
                article_paragraphs_len, article_captions_len]
 
-        features_lst = self.getRatioFeaturesList(lst)
+        features_lst = self.get_ratio_features_list(lst)
         return features_lst
 
     def get_common_words_features(self, post):
@@ -157,7 +157,7 @@ class LinguisticAnalysisFeatures:
         else:
             return form/total, inform/total
 
-    def getDifferenceFeaturesList(self, lst):
+    def get_difference_features_list(self, lst):
         features_lst = []
         for i in range(len(lst)):
             for j in range(i + 1, len(lst)):
@@ -167,7 +167,7 @@ class LinguisticAnalysisFeatures:
                     features_lst.append(-1)
         return features_lst
 
-    def getRatioFeaturesList(self, lst):
+    def get_ratio_features_list(self, lst):
         features_lst = []
         for i in range(len(lst)):
             for j in range(i + 1, len(lst)):
