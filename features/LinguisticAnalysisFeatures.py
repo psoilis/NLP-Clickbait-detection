@@ -191,10 +191,9 @@ class LinguisticAnalysisFeatures:
 
     def get_det_poses(self, post, comp):
 
-        from utils.utils import determiners_possessives_bool
         # TODO: modular? or for all example for title bellow
         if comp == "title":
-            return determiners_possessives_bool(utils.title(post))
+            return utils.determiners_possessives_bool(utils.title(post))
 
     def get_common_clickbait_phrases_feature(self, post):
         post_title = utils.title(post)
@@ -218,3 +217,6 @@ class LinguisticAnalysisFeatures:
                 break
 
         return found
+
+    def get_title_patterns(self, post):
+        return utils.article_title_patterns(utils.article(post))

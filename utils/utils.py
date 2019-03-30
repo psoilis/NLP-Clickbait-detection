@@ -141,7 +141,7 @@ def determiners_possessives_bool(content):
     else:
         text = content
 
-    tagged_tokens = pos_tag(word_tokenize(text))
+    tagged_tokens = pos_tag(word_tokenize(text.lower()))
 
     d_flag = False
     p_flag = False
@@ -161,3 +161,31 @@ def determiners_possessives_bool(content):
 
     return d_flag, p_flag
 
+
+def article_title_patterns(text):
+
+    tagged_tokens = pos_tag(word_tokenize(text.lower()))
+
+    if tagged_tokens[0][1] != "CD":
+        return False, False
+
+    nnpv = False
+    nnpt = False
+
+    np = False
+
+    for i in range(1, len(tagged_tokens)):
+
+        if "NN" in tagged_tokens[i][1]:
+            np = True
+
+        if tagged_tokens[i][1] not in "NN" and not np:
+            return False, False
+
+        if tagged_tokens[i][1] in "VB" and np:
+            nnpv = True
+
+        if tagged_tokens[i][0] == "that" and np:
+            nnpt = True
+
+    return nnpv, nnpt
