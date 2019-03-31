@@ -4,7 +4,10 @@ from datetime import datetime
 from features import AbuserDetectionFeatures as adf
 from features import ImageFeatures as imf
 from features import LinguisticAnalysisFeatures as laf
+from features import SentimentFeatures as sf
 from utils import utils
+from pycorenlp import StanfordCoreNLP
+
 
 image_features = imf.ImageFeatures()
 linguistic_features = laf.LinguisticAnalysisFeatures()
@@ -153,6 +156,18 @@ def test_functions(post):
     print("Slang feat: ", slang_feat)
     slang_feat = linguistic_features.get_slang_words_feature(test_dict_slang)
     print("Slang feat: ", slang_feat)
+    # hyperbolic words
+    try:
+        test_dict = {"postText": "What Are The Best Things To Do In Charleston, South Carolina?"}   # best
+        test_dict_nonh = {"postText": "a random non hyperbolic sentence"}
+        nlp = StanfordCoreNLP('http://localhost:9000')
+        hfeat = sf.get_hyperbolic_words_feature(nlp, test_dict)
+        print("Hyperbolic Words Feature: ", hfeat)
+        hfeat = sf.get_hyperbolic_words_feature(nlp, test_dict_nonh)
+        print("Hyperbolic Words Feature: ", hfeat)
+    except:
+        print("\nServer is not up!")
+
 
 count = 0  # number of posts/articles to process
 with open('dataset/instances.jsonl', 'rb') as f:
