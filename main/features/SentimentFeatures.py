@@ -1,4 +1,4 @@
-from utils import utils
+from main.utils import utils
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 analyser = SentimentIntensityAnalyzer()

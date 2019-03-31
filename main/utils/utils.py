@@ -1,8 +1,8 @@
-import pytesseract
 from PIL import Image
 from PyDictionary import PyDictionary
 from nltk import word_tokenize, pos_tag
 from collections import Counter
+
 
 def img(post):
 
@@ -12,6 +12,11 @@ def img(post):
         return None
     else:
         return Image.open(pm)
+
+
+def post_id(post):
+    # returns post's id
+    return post["id"]
 
 
 def title(post):
