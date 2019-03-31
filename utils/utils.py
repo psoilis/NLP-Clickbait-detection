@@ -193,7 +193,7 @@ def article_title_patterns(text):
 
 def POS_counts(text):
 
-    cdict = {"NNP": 0, "IN": 0, "WRB": 0, "NN": 0, "PRP": 0, "VBZ": 0,
+    cdict = {"NNP": 0, "IN": 0, "WRB": 0, "NN": 0, "PRP": 0, "VBZ": 0, "PRP$": 0, "VBD": 0, "VBP": 0,
              "WP": 0, "DT": 0, "POS": 0, "WDT": 0, "RB": 0, "RBS": 0, "VBN": 0}
 
     counter = dict(Counter(tag for word, tag in pos_tag(word_tokenize(text))))
@@ -205,5 +205,6 @@ def POS_counts(text):
     cdict.update(counter)
 
     return cdict
+
 
 
