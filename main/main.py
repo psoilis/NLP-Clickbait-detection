@@ -167,6 +167,13 @@ def test_functions(post):
         print("Hyperbolic Words Feature: ", hfeat)
     except:
         print("\nServer is not up!")
+    # sentiment polarity
+    test_dict_bad = {"postText": "Check how he died in reality"}
+    test_dict_good = {"postText": "Learn this amazing technique"}
+    pol_feat = sf.get_sentiment_polarity_feature(test_dict_bad)
+    print("Polarity Feature: ", pol_feat)
+    pol_feat = sf.get_sentiment_polarity_feature(test_dict_good)
+    print("Polarity Feature: ", pol_feat)
 
 
 count = 0  # number of posts/articles to process

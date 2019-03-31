@@ -1,4 +1,8 @@
 from utils import utils
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+
+analyser = SentimentIntensityAnalyzer()
+
 
 def get_hyperbolic_words_feature(connection, post):
     """
@@ -26,3 +30,15 @@ def get_hyperbolic_words_feature(connection, post):
                 break
 
     return found
+
+
+def get_sentiment_polarity_feature(post):
+    """
+    Calculates the compound score of the post's title
+    :param post: the current post
+    :return: the compound score
+    """
+    post_title = utils.title(post)
+
+    scores = analyser.polarity_scores(post_title)
+    return scores["compound"]
