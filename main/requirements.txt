@@ -1,7 +1,6 @@
 json-lines==0.5.0
 pytz==2018.9
-pytesseract==0.2.6
 nltk==3.4
-PyDictionary==1.5.2
 pycorenlp==0.3.0
 vaderSentiment==3.2.1
+xgboost==0.82
