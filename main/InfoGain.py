@@ -1,21 +1,16 @@
-from sklearn import feature_selection as fs
-import numpy as np
+from sklearn import feature_selection
+import pandas as pd
 
-T = np.array([
-    [1, 0.5, 2, 1],
-    [0, 1, 0.1, 0.0],
-    [0, 0.1, 1, 0.1],
-    [0, 0.1, 0.1, 1]
-])
-cov = T.dot(T.T)
-mean = np.zeros(4)
+df = pd.read_csv("../dataset/features.csv")
 
-np.random.seed(0)
-Z = np.random.multivariate_normal(mean, cov, size=1000)
-X = Z[:, 1:]
-y = Z[:, 0]
+y = df['Label'].values
 
-mi = fs.mutual_info_regression(X, y, random_state=0)
-print(mi)
-#assert_array_equal(np.argsort(-mi), np.array([1, 2, 0]))
+X = df.loc[:, ~df.columns.isin(['Label', 'Post_ID'])].values
 
+res_sk = feature_selection.mutual_info_classif(X, y)
+
+rdf = pd.DataFrame(list(dict(zip(df.columns[1:-2], res_sk)).items()), columns=['Feature', 'Info_Gain'])\
+    .sort_values(by='Info_Gain', ascending=False)
+
+print(rdf)
+rdf.to_csv("../dataset/info_gain.csv")
