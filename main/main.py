@@ -224,16 +224,16 @@ def test_functions(post):
     print("Post title @ Signs: ", post_title_signs)
     post_title_hashtags = abuser_features.get_no_hashtags(post_title)
     print("Post title # Hashtags: ", post_title_hashtags)
-    post_title_punctuation = abuser_features.get_no_punctuation(post_title)
-    print("Post title Punctuation: ", post_title_punctuation)
+    # post_title_punctuation = abuser_features.get_no_punctuation(post_title)
+    # print("Post title Punctuation: ", post_title_punctuation)
     article_paragraphs = utils.paragraphs(post)
     print("Article paragraphs: ", article_paragraphs)
     article_paragraphs_signs = abuser_features.get_no_signs(article_paragraphs)
     print("Article paragraphs @ Signs: ", article_paragraphs_signs)
     article_paragraphs_hashtags = abuser_features.get_no_hashtags(article_paragraphs)
     print("Article paragraphs # Hashtags: ", article_paragraphs_hashtags)
-    article_paragraphs_punctuation = abuser_features.get_no_punctuation(post_title)
-    print("Article paragraphs Punctuation: ", article_paragraphs_punctuation)
+    # article_paragraphs_punctuation = abuser_features.get_no_punctuation(post_title)
+    # print("Article paragraphs Punctuation: ", article_paragraphs_punctuation)
     # Article Properties
     article_keywords = utils.keywords(post)
     print("Article Keywords: ", article_keywords)
@@ -248,12 +248,12 @@ def test_functions(post):
     article_captions_count = abuser_features.get_no_captions(article_captions)
     print("Article paragraph count: ", article_captions_count)
     ## Post Longevity
-    post_timestamp = datetime.strptime(utils.timestamp(post), '%a %b %d %H:%M:%S %z %Y')
-    print("Post timestamp: ", post_timestamp)
+    # post_timestamp = datetime.strptime(utils.timestamp(post), '%a %b %d %H:%M:%S %z %Y')
+    # print("Post timestamp: ", post_timestamp)
     # post_longevity = abuser_features.get_post_longevity(post_timestamp)
     # print("Post longevity in minutes: ", post_longevity)
-    post_creation_slot = abuser_features.get_post_creation_hour(post_timestamp)
-    print("Post Creation slot: ", post_creation_slot)
+    # post_creation_slot = abuser_features.get_post_creation_hour(post_timestamp)
+    # print("Post Creation slot: ", post_creation_slot)
 
     # common phrases test
     test_dict = {
@@ -297,5 +297,12 @@ def test_functions(post):
     pol_feat = sf.get_sentiment_polarity_feature(test_dict_good)
     print("Polarity Feature: ", pol_feat)
 
-if __name__ == '__main__':
-	main()
+
+count = 0  # number of posts/articles to process
+with open('dataset/instances.jsonl', 'rb') as f:
+    for post in json_lines.reader(f):
+        count += 1
+        test_functions(post)
+        if count == 1:
+            break
+
