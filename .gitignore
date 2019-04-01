@@ -15,3 +15,5 @@ dataset/
 utils/
 features/
 .DS_Store
+main/classification/__pycache__/
+

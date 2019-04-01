@@ -18,8 +18,6 @@ class NaiveBayes:
         return pred_labels
 
     def cross_val(self, data, labels):
-        # data = np.array([[1, 2], [3, 4], [1, 2], [3, 4]])
-        # labels = np.array([1, 2, 2, 1])
 
         kf = KFold(n_splits=2)
         accuracies = []
@@ -28,10 +26,8 @@ class NaiveBayes:
             train_labels, test_labels = labels[train_index], labels[test_index]
 
             self.train(train_set, train_labels)
-            pred = self.gnb.predict_proba(test_set)
             y_pred = self.gnb.predict(test_set)
 
             accuracy = metrics.accuracy_score(test_labels, y_pred)
-
-            # print(y_pred)
-            preds.append(pred)
+            print(accuracy)
+            accuracies.append(accuracy)
