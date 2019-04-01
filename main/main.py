@@ -15,7 +15,7 @@ abuser_features = adf.AbuserDetectionFeatures()
 
 def main():
     # Writing file headlines
-    with open('../dataset/features.csv', encoding='utf8', mode='w',
+    with open('dataset/features.csv', encoding='utf8', mode='w',
               newline='') as features_file:
         features_writer = csv.writer(features_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         features_writer.writerow(['Post_ID', 'Has_Img', 'Chars_Post_Text', 'Chars_Article_Title',
@@ -38,12 +38,15 @@ def main():
                                   'Post_Title_No_Ellipses', 'Article_Title_No_Ellipses', 'Post_Title_No_Dots',
                                   'Article_Title_No_Dots', 'Post_Title_Begins_With_Interrogative',
                                   'Article_Title_Begins_With_Interrogative', 'Post_Title_Begins_With_Number',
-                                  'Article_Title_Begins_With_Number', 'Label'])
-    # TODO: remove counter
+                                  'Article_Title_Begins_With_Number', 'Post_Title_Contains_Determiners',
+                                  'Post_Title_Contains_Possesives', 'Post_Title_Contains_Hyperbolics',
+                                  'Post_Title_Sentiment', 'Post_Title_Contains_Common_Phrases',
+                                 'Post_Title_Contains_Slang', 'Label'])
+    # TODO: remove counter,  uncomment labels, hyperbolics and add n-grams
     # number of posts/articles to process
     count = 0
     # Change instances.jsonl with large dataset
-    with open('../dataset/instances.jsonl', 'rb') as f:
+    with open('dataset/instances.jsonl', 'rb') as f:
         for post in json_lines.reader(f):
             count += 1
 
@@ -102,12 +105,29 @@ def main():
             # Begins with number
             post_title_begins_with_number = abuser_features.get_begins_with_number(post_title)
             article_title_begins_with_number = abuser_features.get_begins_with_number(article_title)
-
+            # Contains determiners and possessives
+            post_title_determiners, post_title_possessives = linguistic_features.get_det_poses(post, 'title')
+            # Contains hyperbolic words
+            try:
+                nlp = StanfordCoreNLP('http://localhost:9000')
+                # post_title_hyperbolics = sf.get_hyperbolic_words_feature(nlp, post)
+                post_title_hyperbolics = 1
+            except:
+                print("\nServer is not up!")
+            # Sentiment polarity
+            post_title_sentiment = sf.get_sentiment_polarity_feature(post)
+            # Contains common clickbait phrases
+            post_title_common_phr = linguistic_features.get_common_clickbait_phrases_feature(post)  # everything zero
+            # Contains Internet slangs
+            post_title_slang = linguistic_features.get_slang_words_feature(post)
+            print(post_title_slang)
+            # N-gram extraction
+            # POS tags extraction
             # Extracting sample label
-            post_label = utils.post_label_extraction(post_id)
-            print(count, post_label)
+            # post_label = utils.post_label_extraction(post_id)
+            post_label = 0
             # Writing line to file (could write them in batches to improve performance)
-            with open('../dataset/features.csv', encoding='utf8', mode='a', newline='') as features_file:
+            with open('dataset/features.csv', encoding='utf8', mode='a', newline='') as features_file:
                 features_writer = csv.writer(features_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                 features_writer.writerow([post_id, has_image, len_chars_post_title, len_chars_article_title,
                                           len_chars_article_desc, len_chars_article_keywords, diff_chars_post_title_article_title,
@@ -129,7 +149,9 @@ def main():
                                           post_title_no_abbreviations, article_title_no_abbreviations, post_title_no_ellipses,
                                           article_title_no_ellipses, post_title_no_dots, article_title_no_dots,
                                           post_title_begins_with_interrogative, article_title_begins_with_interrogative,
-                                          post_title_begins_with_number, article_title_begins_with_number, post_label])
+                                          post_title_begins_with_number, article_title_begins_with_number,
+                                          post_title_determiners, post_title_possessives, post_title_hyperbolics,
+                                          post_title_sentiment, post_title_common_phr, post_title_slang, post_label])
 
             # test_functions(post)
             # if count == 10:
@@ -224,16 +246,16 @@ def test_functions(post):
     print("Post title @ Signs: ", post_title_signs)
     post_title_hashtags = abuser_features.get_no_hashtags(post_title)
     print("Post title # Hashtags: ", post_title_hashtags)
-    post_title_punctuation = abuser_features.get_no_punctuation(post_title)
-    print("Post title Punctuation: ", post_title_punctuation)
+    # post_title_punctuation = abuser_features.get_no_punctuation(post_title)
+    # print("Post title Punctuation: ", post_title_punctuation)
     article_paragraphs = utils.paragraphs(post)
     print("Article paragraphs: ", article_paragraphs)
     article_paragraphs_signs = abuser_features.get_no_signs(article_paragraphs)
     print("Article paragraphs @ Signs: ", article_paragraphs_signs)
     article_paragraphs_hashtags = abuser_features.get_no_hashtags(article_paragraphs)
     print("Article paragraphs # Hashtags: ", article_paragraphs_hashtags)
-    article_paragraphs_punctuation = abuser_features.get_no_punctuation(post_title)
-    print("Article paragraphs Punctuation: ", article_paragraphs_punctuation)
+    # article_paragraphs_punctuation = abuser_features.get_no_punctuation(post_title)
+    # print("Article paragraphs Punctuation: ", article_paragraphs_punctuation)
     # Article Properties
     article_keywords = utils.keywords(post)
     print("Article Keywords: ", article_keywords)
@@ -248,12 +270,12 @@ def test_functions(post):
     article_captions_count = abuser_features.get_no_captions(article_captions)
     print("Article paragraph count: ", article_captions_count)
     ## Post Longevity
-    post_timestamp = datetime.strptime(utils.timestamp(post), '%a %b %d %H:%M:%S %z %Y')
-    print("Post timestamp: ", post_timestamp)
+    # post_timestamp = datetime.strptime(utils.timestamp(post), '%a %b %d %H:%M:%S %z %Y')
+    # print("Post timestamp: ", post_timestamp)
     # post_longevity = abuser_features.get_post_longevity(post_timestamp)
     # print("Post longevity in minutes: ", post_longevity)
-    post_creation_slot = abuser_features.get_post_creation_hour(post_timestamp)
-    print("Post Creation slot: ", post_creation_slot)
+    # post_creation_slot = abuser_features.get_post_creation_hour(post_timestamp)
+    # print("Post Creation slot: ", post_creation_slot)
 
     # common phrases test
     test_dict = {
@@ -297,5 +319,12 @@ def test_functions(post):
     pol_feat = sf.get_sentiment_polarity_feature(test_dict_good)
     print("Polarity Feature: ", pol_feat)
 
-if __name__ == '__main__':
-	main()
+
+count = 0  # number of posts/articles to process
+with open('dataset/instances.jsonl', 'rb') as f:
+    for post in json_lines.reader(f):
+        count += 1
+        test_functions(post)
+        if count == 1:
+            break
+

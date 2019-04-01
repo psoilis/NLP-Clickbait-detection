@@ -20,7 +20,16 @@ class LinguisticAnalysisFeatures:
                          "You Didn’t Know Exist", "You Didn’t Know Existed", "You Won't Believe", "You Won’t Believe",
                          "You Wont Believe", "Have To See To Believe"]
 
-    slang_words = ["lol", "wtf", "wth", "lmao", "rofl", "rotfl", "omg", "yolo"]
+    slang_words = ["3cool5u", "420", "afaik", "afk", "asl", "atm", "atw", "ayy", "bae", "bb", "bbiab", "bbl", "bbs",
+                    "bc", "bf", "bff", "bork", "brb", "btw", "cba", "convo", "cp", "cya", "dank", "dc", "dem feels", "dw",
+                    "e2e", "fml", "FOMO", "FTFY", "ftl", "ftw", "fwiw", "fyi", "g2g", "g4u", "gf", "gg", "goml", "gr8", "gratz",
+                    "gtfo", "guiz", "hbu", "hru", "ianadb", "ianalb", "ianap", "idc", "idgaf", "idk", "iirc", "ik", "ikr", "ily",
+                    "inb4", "irl", "jfc", "jk", "John Cena", "JOHN CENA", "js", "k", "kappa", "kek", "kms", "kthx", "l8r", "leet",
+                    "lmao", "lmk", "lol", "LPT", "lrl", "lrn2", "m8", "maga", "mfw", "mrw", "nerf", "ngl", "nm", "nmu", "noob",
+                    "nu", "nvm", "ofc", "omf", "omg", "omw", "ooc", "op", "OP", "orly", "pepe", "pleb", "pleb tier", "plz", "pron",
+                    "pwned", "REEEEEEEE", "rekt", "rickroll", "rip", "rly", "rms", "rofl", "rotflol", "rtfm", "rude", "shank", "smd",
+                    "smh", "soz", "swag", "tbf", "tbh", "tbt", "TIFU", "tf", "tfw", "thx", "tide", "TIL", "tl;dr", "tmw", "tolo",
+                    "topkek", "ty", "uwotm8", "w00t", "wb", "wot", "wtb", "wtf", "wtg", "wts", "wuu2", "yarly", "ymmv", "yolo", "yw"]
 
     def __init__(self):
         print("Linguistic Analysis features")
@@ -192,6 +201,9 @@ class LinguisticAnalysisFeatures:
 
     def get_slang_words_feature(self, post):
         post_title = utils.title(post)
+        # If list extract the element into a string
+        if isinstance(post_title, list):
+            post_title = post_title[0]
         post_title = post_title.casefold()  # lowercase so that it matches lol, Lol, LoL, etc..
 
         found = 0

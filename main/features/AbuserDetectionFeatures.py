@@ -114,27 +114,27 @@ class AbuserDetectionFeatures:
                     break
         return number
 
-    # def get_no_excl_quest(self, post):
-    #     excl_quest = 0
-    #     if len(post) == 1:
-    #         # string case
-    #         excl_quest = post[0].count('!?')
-    #     else:
-    #         # list case
-    #         for item in post:
-    #             excl_quest += item.count('!?')
-    #     return excl_quest
+    def get_no_excl_quest(self, post):
+        excl_quest = 0
+        if isinstance(post, str):
+            # string case
+            excl_quest = post.count('!?')
+        elif isinstance(post, list):
+            # list case
+            for item in post:
+                excl_quest += item.count('!?')
+        return excl_quest
 
-    # def get_no_punctuation(self, post):
-    #     punctuation = 0
-    #     if len(post) == 1:
-    #         # string case
-    #         punctuation = post[0].count('?') + post[0].count(',') + post[0].count(':') + post[0].count('...')
-    #     else:
-    #         # list case
-    #         for item in post:
-    #             punctuation += item.count('?') + item.count(',') + item.count(':') + item.count('...')
-    #     return punctuation
+    def get_no_punctuation(self, post):
+        punctuation = 0
+        if isinstance(post, str):
+            # string case
+            punctuation = post.count('?') + post.count(',') + post.count(':') + post.count('...')
+        elif isinstance(post, list):
+            # list case
+            for item in post:
+                punctuation += item.count('?') + item.count(',') + item.count(':') + item.count('...')
+        return punctuation
 
     def get_no_keywords(self, article):
         keywords = 0
