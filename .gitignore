@@ -12,3 +12,6 @@ server/nlp/.idea
 server/nlp/target
 server/nlp/nlp.iml
 dataset/
+utils/
+features/
+.DS_Store
