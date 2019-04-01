@@ -1,17 +1,16 @@
-from PIL import Image
-from PyDictionary import PyDictionary
 from nltk import word_tokenize, pos_tag
 from collections import Counter
+import json_lines
 
 
 def img(post):
 
     pm = post["postMedia"]
 
-    if pm is None:
+    if not pm:
         return None
     else:
-        return Image.open(pm)
+        return 1
 
 
 def post_id(post):
@@ -56,6 +55,11 @@ def paragraphs(post):
 def captions(post):
     # returns the target article's captions
     return post["targetCaptions"]
+
+
+def truth_label(post):
+    # returns the post label from the truth file
+    return post['truthClass']
 
 
 def len_characters(content):
@@ -211,5 +215,15 @@ def POS_counts(text):
 
     return cdict
 
-
+def post_label_extraction(id):
+    with open('../dataset/truth.jsonl', 'rb') as label_file:
+        for data in json_lines.reader(label_file):
+            truth_id = post_id(data)
+            if id == truth_id:
+                label = truth_label(data)
+                break
+        if label == 'no-clickbait':
+            return 0;
+        elif label == 'clickbait':
+            return 1;
 

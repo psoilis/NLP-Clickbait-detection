@@ -1,6 +1,6 @@
 import json
 import json_lines
-from datetime import datetime
+import csv
 from features import AbuserDetectionFeatures as adf
 from features import ImageFeatures as imf
 from features import LinguisticAnalysisFeatures as laf
@@ -12,6 +12,128 @@ from pycorenlp import StanfordCoreNLP
 image_features = imf.ImageFeatures()
 linguistic_features = laf.LinguisticAnalysisFeatures()
 abuser_features = adf.AbuserDetectionFeatures()
+
+def main():
+    # Writing file headlines
+    with open('../dataset/features.csv', encoding='utf8', mode='w',
+              newline='') as features_file:
+        features_writer = csv.writer(features_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        features_writer.writerow(['Post_ID', 'Has_Img', 'Chars_Post_Text', 'Chars_Article_Title',
+                                  'Chars_Article_Description', 'Chars_Article_Keywords', 'Diff_Char_Post_Title_Article_Title',
+                                  'Diff_Char_Post_Title_Article_Descr', 'Diff_Char_Post_Title_Article_Keywords',
+                                  'Diff_Char_Article_Title_Article_Descr', 'Diff_Char_Article_Title_Article_Keywords',
+                                  'Diff_Char_Article_Descr_Article_Keywords', 'Ratio_Char_Post_Title_Article_Title',
+                                  'Ratio_Char_Post_Title_Article_Descr', 'Ratio_Char_Post_Title_Article_Keywords',
+                                  'Ratio_Char_Article_Title_Article_Descr', 'Ratio_Char_Article_Title_Article_Keywords',
+                                  'Ratio_Char_Article_Descr_Article_Keywords', 'Words_Post_Text', 'Words_Article_Title',
+                                  'Words_Article_Description', 'Words_Article_Keywords', 'Diff_Words_Post_Title_Article_Title',
+                                  'Diff_Words_Post_Title_Article_Descr', 'Diff_Words_Post_Title_Article_Keywords',
+                                  'Diff_Words_Article_Title_Article_Descr', 'Diff_Words_Article_Title_Article_Keywords',
+                                  'Diff_Words_Article_Descr_Article_Keywords', 'Ratio_Words_Post_Title_Article_Title',
+                                  'Ratio_Words_Post_Title_Article_Descr', 'Ratio_Words_Post_Title_Article_Keywords',
+                                  'Ratio_Words_Article_Title_Article_Descr', 'Ratio_Words_Article_Title_Article_Keywords',
+                                  'Ratio_Words_Article_Descr_Article_Keywords', 'Post_Creation_Hour', 'Post_Title_No_@',
+                                  'Post_Title_No_#', 'Post_Title_No_Exclam', 'Article_Title_No_Exclam', 'Post_Title_No_Question',
+                                  'Article_Title_No_Question', 'Post_Title_No_Abbrev', 'Article_Title_No_Abbrev',
+                                  'Post_Title_No_Ellipses', 'Article_Title_No_Ellipses', 'Post_Title_No_Dots',
+                                  'Article_Title_No_Dots', 'Post_Title_Begins_With_Interrogative',
+                                  'Article_Title_Begins_With_Interrogative', 'Post_Title_Begins_With_Number',
+                                  'Article_Title_Begins_With_Number', 'Label'])
+    # TODO: remove counter
+    # number of posts/articles to process
+    count = 0
+    # Change instances.jsonl with large dataset
+    with open('../dataset/instances.jsonl', 'rb') as f:
+        for post in json_lines.reader(f):
+            count += 1
+
+            # Reading post/article elements
+            post_id = utils.post_id(post)
+            post_title = utils.title(post)
+            article_title = utils.article(post)
+            # Presense of image in a post
+            has_image = image_features.image_presence(post)
+            # Number of characters
+            len_chars_post_title, len_chars_article_title, len_chars_article_desc, len_chars_article_keywords = \
+                linguistic_features.get_no_of_characters_features(post)
+            # Difference between number of characters
+            diff_chars_post_title_article_title, diff_chars_post_title_article_desc, diff_chars_post_title_article_keywords, \
+            diff_chars_article_title_article_desc, diff_chars_article_title_article_keywords, diff_chars_desc_title_article_keywords = \
+                linguistic_features.get_diff_between_no_of_characters_features(post)
+            # Number of characters ratio
+            ratio_chars_post_title_article_title, ratio_chars_post_title_article_desc, ratio_chars_post_title_article_keywords, \
+            ratio_chars_article_title_article_desc, ratio_chars_article_title_article_keywords, ratio_chars_desc_title_article_keywords = \
+                linguistic_features.get_no_of_characters_ratio_features(post)
+            # Number of Words
+            len_words_post_title, len_words_article_title, len_words_article_desc, len_words_article_keywords = \
+                linguistic_features.get_no_of_characters_features(post)
+            # Difference between number of words
+            diff_words_post_title_article_title, diff_words_post_title_article_desc, diff_words_post_title_article_keywords, \
+            diff_words_article_title_article_desc, diff_words_article_title_article_keywords, diff_words_desc_title_article_keywords = \
+                linguistic_features.get_diff_between_no_of_words_features(post)
+            # Number of words ratio
+            ratio_words_post_title_article_title, ratio_words_post_title_article_desc, ratio_words_post_title_article_keywords, \
+            ratio_words_article_title_article_desc, ratio_words_article_title_article_keywords, ratio_words_desc_title_article_keywords = \
+                linguistic_features.get_no_of_words_ratio_features(post)
+            # Post creation hour
+            post_creation_hour = abuser_features.get_post_creation_hour(post)
+            # Number of sings
+            post_title_no_signs = abuser_features.get_no_signs(post_title)
+            # Number of hashtags
+            post_title_no_hashtags = abuser_features.get_no_hashtags(post_title)
+            # Number of exclamations
+            post_title_no_exclamations = abuser_features.get_no_exclamations(post_title)
+            article_title_no_exclamations = abuser_features.get_no_exclamations(article_title)
+            # Number of questionmarks
+            post_title_no_questionmarks = abuser_features.get_no_questionmarks(post_title)
+            article_title_no_questionmarks = abuser_features.get_no_questionmarks(article_title)
+            # Number of abbreviations
+            post_title_no_abbreviations = abuser_features.get_no_abbreviations(post_title)
+            article_title_no_abbreviations = abuser_features.get_no_abbreviations(article_title)
+            # Number of ellipses
+            post_title_no_ellipses = abuser_features.get_no_ellipses(post_title)
+            article_title_no_ellipses = abuser_features.get_no_ellipses(article_title)
+            # Number of dots
+            post_title_no_dots = abuser_features.get_no_dots(post_title)
+            article_title_no_dots = abuser_features.get_no_dots(article_title)
+            # Begins with interrogative
+            post_title_begins_with_interrogative = abuser_features.get_begins_with_interrogative(post_title)
+            article_title_begins_with_interrogative = abuser_features.get_begins_with_interrogative(article_title)
+            # Begins with number
+            post_title_begins_with_number = abuser_features.get_begins_with_number(post_title)
+            article_title_begins_with_number = abuser_features.get_begins_with_number(article_title)
+
+            # Extracting sample label
+            post_label = utils.post_label_extraction(post_id)
+            print(count, post_label)
+            # Writing line to file (could write them in batches to improve performance)
+            with open('../dataset/features.csv', encoding='utf8', mode='a', newline='') as features_file:
+                features_writer = csv.writer(features_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                features_writer.writerow([post_id, has_image, len_chars_post_title, len_chars_article_title,
+                                          len_chars_article_desc, len_chars_article_keywords, diff_chars_post_title_article_title,
+                                          diff_chars_post_title_article_desc, diff_chars_post_title_article_keywords,
+                                          diff_chars_article_title_article_desc, diff_chars_article_title_article_keywords,
+                                          diff_chars_desc_title_article_keywords, ratio_chars_post_title_article_title,
+                                          ratio_chars_post_title_article_desc, ratio_chars_post_title_article_keywords,
+                                          ratio_chars_article_title_article_desc, ratio_chars_article_title_article_keywords,
+                                          ratio_chars_desc_title_article_keywords, len_words_post_title,
+                                          len_words_article_title, len_words_article_desc, len_words_article_keywords,
+                                          diff_words_post_title_article_title, diff_words_post_title_article_desc,
+                                          diff_words_post_title_article_keywords, diff_words_article_title_article_desc,
+                                          diff_words_article_title_article_keywords, diff_words_desc_title_article_keywords,
+                                          ratio_words_post_title_article_title, ratio_words_post_title_article_desc,
+                                          ratio_words_post_title_article_keywords, ratio_words_article_title_article_desc,
+                                          ratio_words_article_title_article_keywords, ratio_words_desc_title_article_keywords,
+                                          post_creation_hour, post_title_no_signs, post_title_no_hashtags, post_title_no_exclamations,
+                                          article_title_no_exclamations, post_title_no_questionmarks,article_title_no_questionmarks,
+                                          post_title_no_abbreviations, article_title_no_abbreviations, post_title_no_ellipses,
+                                          article_title_no_ellipses, post_title_no_dots, article_title_no_dots,
+                                          post_title_begins_with_interrogative, article_title_begins_with_interrogative,
+                                          post_title_begins_with_number, article_title_begins_with_number, post_label])
+
+            # test_functions(post)
+            # if count == 10:
+            #     break
 
 ##### TESTS #####
 def test_functions(post):
@@ -175,11 +297,5 @@ def test_functions(post):
     pol_feat = sf.get_sentiment_polarity_feature(test_dict_good)
     print("Polarity Feature: ", pol_feat)
 
-
-count = 0  # number of posts/articles to process
-with open('dataset/instances.jsonl', 'rb') as f:
-    for post in json_lines.reader(f):
-        count += 1
-        test_functions(post)
-        if count == 1:
-            break
+if __name__ == '__main__':
+	main()

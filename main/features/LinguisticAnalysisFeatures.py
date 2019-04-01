@@ -1,4 +1,4 @@
-from main.utils import utils
+from utils import utils
 
 
 # TODO: maybe change that to a module
@@ -32,12 +32,10 @@ class LinguisticAnalysisFeatures:
         :return: a list that contains the features
         """
         f1 = utils.len_characters(utils.title(post))
-        f3 = utils.len_characters(utils.article(post))
-        f4 = utils.len_characters(utils.description(post))
-        f5 = utils.len_characters(utils.keywords(post))
-        f6 = utils.len_characters(utils.captions(post))
-        f7 = utils.len_characters(utils.paragraphs(post))
-        return [f1, f3, f4, f5, f6, f7]
+        f2 = utils.len_characters(utils.article(post))
+        f3 = utils.len_characters(utils.description(post))
+        f4 = utils.len_characters(utils.keywords(post))
+        return [f1, f2, f3, f4]
 
     def get_diff_between_no_of_characters_features(self, post):
         """
@@ -49,11 +47,8 @@ class LinguisticAnalysisFeatures:
         article_title_len = utils.len_characters(utils.article(post))
         article_desc_len = utils.len_characters(utils.description(post))
         article_keywords_len = utils.len_characters(utils.keywords(post))
-        article_paragraphs_len = utils.len_characters(utils.paragraphs(post))
-        article_captions_len = utils.len_characters(utils.captions(post))
 
-        lst = [post_title_len, article_title_len, article_desc_len, article_keywords_len,
-               article_paragraphs_len, article_captions_len]
+        lst = [post_title_len, article_title_len, article_desc_len, article_keywords_len]
 
         features_lst = self.get_difference_features_list(lst)
         return features_lst
@@ -69,11 +64,8 @@ class LinguisticAnalysisFeatures:
         article_title_len = utils.len_characters(utils.article(post))
         article_desc_len = utils.len_characters(utils.description(post))
         article_keywords_len = utils.len_characters(utils.keywords(post))
-        article_paragraphs_len = utils.len_characters(utils.paragraphs(post))
-        article_captions_len = utils.len_characters(utils.captions(post))
 
-        lst = [post_title_len, article_title_len, article_desc_len, article_keywords_len,
-               article_paragraphs_len, article_captions_len]
+        lst = [post_title_len, article_title_len, article_desc_len, article_keywords_len]
 
         features_lst = self.get_ratio_features_list(lst)
         return features_lst
@@ -85,12 +77,10 @@ class LinguisticAnalysisFeatures:
         :return: a list that contains the features
         """
         f1 = utils.len_words(utils.title(post))
-        f3 = utils.len_words(utils.article(post))
-        f4 = utils.len_words(utils.description(post))
-        f5 = utils.len_words(utils.keywords(post))
-        f6 = utils.len_words(utils.captions(post))
-        f7 = utils.len_words(utils.paragraphs(post))
-        return [f1, f3, f4, f5, f6, f7]
+        f2 = utils.len_words(utils.article(post))
+        f3 = utils.len_words(utils.description(post))
+        f4 = utils.len_words(utils.keywords(post))
+        return [f1, f2, f3, f4]
 
     def get_diff_between_no_of_words_features(self, post):
         """
@@ -102,11 +92,8 @@ class LinguisticAnalysisFeatures:
         article_title_len = utils.len_words(utils.article(post))
         article_desc_len = utils.len_words(utils.description(post))
         article_keywords_len = utils.len_words(utils.keywords(post))
-        article_paragraphs_len = utils.len_words(utils.paragraphs(post))
-        article_captions_len = utils.len_words(utils.captions(post))
 
-        lst = [post_title_len, article_title_len, article_desc_len, article_keywords_len,
-               article_paragraphs_len, article_captions_len]
+        lst = [post_title_len, article_title_len, article_desc_len, article_keywords_len]
 
         features_lst = self.get_difference_features_list(lst)
         return features_lst
@@ -122,11 +109,8 @@ class LinguisticAnalysisFeatures:
         article_title_len = utils.len_words(utils.article(post))
         article_desc_len = utils.len_words(utils.description(post))
         article_keywords_len = utils.len_words(utils.keywords(post))
-        article_paragraphs_len = utils.len_words(utils.paragraphs(post))
-        article_captions_len = utils.len_words(utils.captions(post))
 
-        lst = [post_title_len, article_title_len, article_desc_len, article_keywords_len,
-               article_paragraphs_len, article_captions_len]
+        lst = [post_title_len, article_title_len, article_desc_len, article_keywords_len]
 
         features_lst = self.get_ratio_features_list(lst)
         return features_lst

@@ -1,4 +1,4 @@
-from main.utils import utils
+from utils import utils
 # TODO: maybe change that to a module
 
 
