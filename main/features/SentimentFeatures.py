@@ -15,6 +15,9 @@ def get_hyperbolic_words_feature(connection, post):
     at least one hyperbolic word or not
     """
     post_title = utils.title(post)
+    # If list extract the element into a string
+    if isinstance(post_title, list):
+        post_title = post_title[0]
     post_title_tokens = post_title.split()
 
     found = 0
@@ -25,7 +28,7 @@ def get_hyperbolic_words_feature(connection, post):
                                    'timeout': 1000})
         for s in res["sentences"]:
             sentiment_value = s["sentimentValue"]
-            if int(sentiment_value) == 4:   # 4: very positive
+            if int(sentiment_value) == 4 or int(sentiment_value) == 0:   # 4: very positive 0: very negative
                 found = 1
                 break
 
@@ -39,6 +42,9 @@ def get_sentiment_polarity_feature(post):
     :return: the compound score
     """
     post_title = utils.title(post)
+    # If list extract the element into a string
+    if isinstance(post_title, list):
+        post_title = post_title[0]
 
     scores = analyser.polarity_scores(post_title)
     return scores["compound"]

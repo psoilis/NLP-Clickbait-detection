@@ -152,8 +152,8 @@ def determiners_possessives_bool(content):
 
     tagged_tokens = pos_tag(word_tokenize(text.lower()))
 
-    d_flag = False
-    p_flag = False
+    d_flag = 0
+    p_flag = 0
 
     for t in tagged_tokens:
 
@@ -163,10 +163,10 @@ def determiners_possessives_bool(content):
 
         if t[1] == "DT":
             # determiner
-            d_flag = True
+            d_flag = 1
         elif t[1] == "PRP$":
             # possessives
-            p_flag = True
+            p_flag = 1
 
     return d_flag, p_flag
 
@@ -216,7 +216,7 @@ def POS_counts(text):
     return cdict
 
 def post_label_extraction(id):
-    with open('../dataset/truth.jsonl', 'rb') as label_file:
+    with open('dataset/truth.jsonl', 'rb') as label_file:
         for data in json_lines.reader(label_file):
             truth_id = post_id(data)
             if id == truth_id:

@@ -201,6 +201,9 @@ class LinguisticAnalysisFeatures:
 
     def get_slang_words_feature(self, post):
         post_title = utils.title(post)
+        # If list extract the element into a string
+        if isinstance(post_title, list):
+            post_title = post_title[0]
         post_title = post_title.casefold()  # lowercase so that it matches lol, Lol, LoL, etc..
 
         found = 0
