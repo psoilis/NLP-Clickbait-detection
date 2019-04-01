@@ -11,3 +11,4 @@ main/data.json
 server/nlp/.idea
 server/nlp/target
 server/nlp/nlp.iml
+dataset/
