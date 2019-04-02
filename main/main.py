@@ -86,6 +86,7 @@ def main():
                 post_title_hyperbolics = 1
             except:
                 print("\nServer is not up!")
+                # post_title_hyperbolics = 1
             # Sentiment polarity
             post_title_sentiment = sf.get_sentiment_polarity_feature(post)
             # Contains common clickbait phrases
@@ -115,6 +116,15 @@ def main():
             for key, value in counts_POS.items():
                 feature_output += ',' + str(value)
             # N-gram extraction
+            unigrams = linguistic_features.get_ngram_counts(post, 1)
+            for key, value in unigrams.items():
+                feature_output += ',' + str(value)
+            bigrams = linguistic_features.get_ngram_counts(post, 2)
+            for key, value in bigrams.items():
+                feature_output += ',' + str(value)
+            trigrams = linguistic_features.get_ngram_counts(post, 3)
+            for key, value in trigrams.items():
+                feature_output += ',' + str(value)
             # If first sample, write the file headers first
             if not headers:
                 feature_headers = 'Post_ID,Label,Has_Img,Post_Creation_Hour,Post_Title_Begins_With_Interrogative,' \
@@ -134,6 +144,12 @@ def main():
                                   'Post_Title_No_Exclam,Article_Title_No_Exclam,Post_Title_No_Question,Article_Title_No_Question,Post_Title_No_Abbrev,' \
                                   'Article_Title_No_Abbrev,Post_Title_No_Ellipses,Article_Title_No_Ellipses,Post_Title_No_Dots,Article_Title_No_Dots'
                 for key, value in counts_POS.items():
+                    feature_headers += ',' + key
+                for key, value in unigrams.items():
+                    feature_headers += ',' + key
+                for key, value in bigrams.items():
+                    feature_headers += ',' + key
+                for key, value in trigrams.items():
                     feature_headers += ',' + key
                 # Writing file headlines
                 with open('dataset/features.csv', encoding='utf8', mode='w',
