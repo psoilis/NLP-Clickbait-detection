@@ -32,6 +32,7 @@ class LinguisticAnalysisFeatures:
                     "topkek", "ty", "uwotm8", "w00t", "wb", "wot", "wtb", "wtf", "wtg", "wts", "wuu2", "yarly", "ymmv", "yolo", "yw"]
 
     ngram_corpus = {}
+    n = 0
 
     def __init__(self):
         print("Linguistic Analysis features")
@@ -229,9 +230,9 @@ class LinguisticAnalysisFeatures:
         Calculates the ngram features of the post
         :return: the n gram feature vector of the post
         """
-        if not self.ngram_corpus:
+        if not self.ngram_corpus or self.n != n:
             self.ngram_corpus = NgramUtils.get_ngram_corpus(n)
-
+            self.n = n
         return NgramUtils.get_ngram_feature_vector(post, n, self.ngram_corpus)
 
 
