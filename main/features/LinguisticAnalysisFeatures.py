@@ -1,4 +1,4 @@
-from utils import utils
+from utils import utils, NgramUtils
 
 
 # TODO: maybe change that to a module
@@ -30,6 +30,8 @@ class LinguisticAnalysisFeatures:
                     "pwned", "REEEEEEEE", "rekt", "rickroll", "rip", "rly", "rms", "rofl", "rotflol", "rtfm", "rude", "shank", "smd",
                     "smh", "soz", "swag", "tbf", "tbh", "tbt", "TIFU", "tf", "tfw", "thx", "tide", "TIL", "tl;dr", "tmw", "tolo",
                     "topkek", "ty", "uwotm8", "w00t", "wb", "wot", "wtb", "wtf", "wtg", "wts", "wuu2", "yarly", "ymmv", "yolo", "yw"]
+
+    ngram_corpus = {}
 
     def __init__(self):
         print("Linguistic Analysis features")
@@ -219,5 +221,18 @@ class LinguisticAnalysisFeatures:
 
     def get_POS_counts(self, post):
         return utils.POS_counts(utils.article(post))
+
+    def get_ngram_counts(self, post, n):
+        """
+        :arg: post => the post that we want to extract the features from
+        :arg: n => the n in n-gram
+        Calculates the ngram features of the post
+        :return: the n gram feature vector of the post
+        """
+        if not self.ngram_corpus:
+            self.ngram_corpus = NgramUtils.get_ngram_corpus(n)
+
+        return NgramUtils.get_ngram_feature_vector(post, n, self.ngram_corpus)
+
 
 

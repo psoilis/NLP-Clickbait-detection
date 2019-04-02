@@ -112,34 +112,6 @@ def words(content):
     return words_lst
 
 
-def lang_dict_formal(content):
-
-    wo = words(content)
-    dictionary = PyDictionary()
-
-    formal = []
-
-    for w in wo:
-        if dictionary.meaning(w) is not None:
-            formal.append(w)
-
-    return formal
-
-
-def lang_dict_informal(content):
-
-    wo = words(content)
-    dictionary = PyDictionary()
-
-    informal = []
-
-    for w in wo:
-        if dictionary.meaning(w) is None:
-            informal.append(w)
-
-    return informal
-
-
 def determiners_possessives_bool(content):
 
     text = ""
@@ -215,6 +187,7 @@ def POS_counts(text):
 
     return cdict
 
+
 def post_label_extraction(id):
     with open('dataset/truth.jsonl', 'rb') as label_file:
         for data in json_lines.reader(label_file):
@@ -223,7 +196,6 @@ def post_label_extraction(id):
                 label = truth_label(data)
                 break
         if label == 'no-clickbait':
-            return 0;
+            return 0
         elif label == 'clickbait':
-            return 1;
-
+            return 1
