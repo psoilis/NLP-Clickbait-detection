@@ -185,7 +185,6 @@ class LinguisticAnalysisFeatures:
     def get_title_patterns(self, post):
         return utils.article_title_patterns(utils.article(post))
 
-
     def get_POS_counts(self, post):
         return utils.POS_counts(utils.article(post))
 
@@ -199,10 +198,5 @@ class LinguisticAnalysisFeatures:
 
         if not self.ngram_corpus[n]:
             self.ngram_corpus[n] = NgramUtils.get_ngram_corpus(n, threshold).copy()
-            print(self.ngram_corpus[n])
 
-        return NgramUtils.get_ngram_feature_vector(post, n, self.ngram_corpus)
-
-
-
-
+        return NgramUtils.get_ngram_feature_vector(post, n, self.ngram_corpus[n])
