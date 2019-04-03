@@ -21,7 +21,7 @@ class SVM:
         return pred_labels
 
     def cross_validation(self, data, labels):
-        scores = cross_val_score(self.model, data, labels, cv=5)
+        scores = cross_val_score(self.model, data, labels, cv=10)
         accuracy = (scores.mean(), scores.std() * 2)
         print("Accuracy: %0.2f (+/- %0.2f)" % accuracy)
         return accuracy
