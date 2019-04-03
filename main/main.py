@@ -14,18 +14,18 @@ linguistic_features = laf.LinguisticAnalysisFeatures()
 abuser_features = adf.AbuserDetectionFeatures()
 
 def main():
-    # TODO: uncomment labels, hyperbolics and add n-grams
-    # Change instances.jsonl with large dataset
     with open('dataset/instances.jsonl', 'rb') as f:
         headers = False
+        count = 0  # elements processed
         for post in json_lines.reader(f):
+            count += 1
+            print('Sample', count)
             # Reading post/article elements
             post_id = utils.post_id(post)
             post_title = utils.title(post)
             article_title = utils.article(post)
             # Extracting sample label
-            # post_label = utils.post_label_extraction(post_id)
-            post_label = 0
+            post_label = utils.post_label_extraction(post_id)
             # Presense of image in a post
             has_image = image_features.image_presence(post)
             # Number of characters
@@ -82,11 +82,9 @@ def main():
             # Contains hyperbolic words
             try:
                 nlp = StanfordCoreNLP('http://localhost:9000')
-                # post_title_hyperbolics = sf.get_hyperbolic_words_feature(nlp, post)
-                post_title_hyperbolics = 1
+                post_title_hyperbolics = sf.get_hyperbolic_words_feature(nlp, post)
             except:
                 print("\nServer is not up!")
-                # post_title_hyperbolics = 1
             # Sentiment polarity
             post_title_sentiment = sf.get_sentiment_polarity_feature(post)
             # Contains common clickbait phrases
@@ -321,4 +319,5 @@ def test_functions(post):
     print("Polarity Feature: ", pol_feat)
 
 
-main()
+if __name__ == '__main__':
+    main()
