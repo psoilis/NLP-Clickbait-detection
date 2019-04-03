@@ -1,8 +1,8 @@
+import numpy as np
 from sklearn import metrics
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import KFold
 
-import numpy as np
 
 class NaiveBayes:
     gnb = None
@@ -15,11 +15,11 @@ class NaiveBayes:
 
     def predict(self, data):
         pred_labels = self.gnb.predict(data)
+        # TODO: calculate AUC, Precision, Recall, Accuracy
         return pred_labels
 
-    def cross_val(self, data, labels):
-
-        kf = KFold(n_splits=2)
+    def cross_validation(self, data, labels):
+        kf = KFold(n_splits=10)
         accuracies = []
         for train_index, test_index in kf.split(data):
             train_set, test_set = data[train_index], data[test_index]
@@ -29,5 +29,8 @@ class NaiveBayes:
             y_pred = self.gnb.predict(test_set)
 
             accuracy = metrics.accuracy_score(test_labels, y_pred)
-            print(accuracy)
+            # confusion_matrix = metrics.confusion_matrix(test_labels, y_pred, labels=[0, 1, 2])
             accuracies.append(accuracy)
+
+        accuracies_average = np.mean(accuracies)
+        return accuracies_average
