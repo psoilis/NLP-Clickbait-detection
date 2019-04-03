@@ -25,7 +25,7 @@ def get_hyperbolic_words_feature(connection, post):
         res = connection.annotate(token, properties={
                                    'annotators': 'sentiment',
                                    'outputFormat': 'json',
-                                   'timeout': 1000})
+                                   'timeout': 10000})
         for s in res["sentences"]:
             sentiment_value = s["sentimentValue"]
             if int(sentiment_value) == 4 or int(sentiment_value) == 0:   # 4: very positive 0: very negative

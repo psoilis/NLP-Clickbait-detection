@@ -901,7 +901,7 @@ public class StanfordCoreNLPServer implements Runnable {
 					of = StanfordCoreNLP.OutputFormat.valueOf(props.getProperty("outputFormat", "json").toUpperCase());
 					String text = ann.get(CoreAnnotations.TextAnnotation.class).replace('\n', ' ');
 					if ( ! quiet) {
-//						System.out.println(text);
+						System.out.println(text);
 					}
 					if (maxCharLength > 0 && text.length() > maxCharLength) {
 						respondBadInput("Request is too long to be handled by server: " + text.length() + " characters. Max length is " + maxCharLength + " characters.", httpExchange);
