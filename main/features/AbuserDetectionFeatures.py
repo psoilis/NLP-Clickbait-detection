@@ -112,7 +112,7 @@ def get_begins_with_number(post):
     elif isinstance(post, list):
         # list case
         for item in post:
-            if item[0].isdigit():
+            if len(item) != 0 and item[0].isdigit():
                 number = 1
                 break
     return number
