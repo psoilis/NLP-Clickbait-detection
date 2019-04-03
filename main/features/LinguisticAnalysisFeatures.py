@@ -1,3 +1,4 @@
+import re
 from utils import utils, NgramUtils
 
 
@@ -207,13 +208,16 @@ class LinguisticAnalysisFeatures:
         # If list extract the element into a string
         if isinstance(post_title, list):
             post_title = post_title[0]
-        post_title = post_title.casefold()  # lowercase so that it matches lol, Lol, LoL, etc..
+
+        post_title = post_title.casefold()
 
         found = 0
         for phrase in self.slang_words:
-            if phrase.casefold() in post_title:
+            result = re.search(r'\b' + phrase + '\W', post_title)
+            if result:
                 found = 1
                 break
+
 
         return found
 

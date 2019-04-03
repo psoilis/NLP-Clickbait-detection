@@ -294,12 +294,9 @@ def test_functions(post):
     print("Clickbait phrase: ", clickbait_feat)
 
     # slang abbreviations test
-    test_dict = {
-        "postText": "yes, you won't believe",
-    }
-    test_dict_slang = {
-        "postText": "lOl, you won't believe",
-    }
+    test_dict = {"postText": "tyri kai psomi"}  # "ty" exists but not as an exact match
+    test_dict_slang = {"postText": "Ty for helping me"}
+
     slang_feat = linguistic_features.get_slang_words_feature(test_dict)
     print("Slang feat: ", slang_feat)
     slang_feat = linguistic_features.get_slang_words_feature(test_dict_slang)
@@ -325,4 +322,3 @@ def test_functions(post):
 
 
 main()
-
