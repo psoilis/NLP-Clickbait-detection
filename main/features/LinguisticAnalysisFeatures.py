@@ -128,44 +128,6 @@ class LinguisticAnalysisFeatures:
         features_lst = self.get_ratio_features_list(lst)
         return features_lst
 
-    def get_common_words_features(self, post):
-        print("fix")
-
-    def get_no_of_formal_informal_words_features(self, post):
-        # init
-        form = 0
-        inf = 0
-        # post title
-        form += len(utils.lang_dict_formal(utils.title(post)))
-        inf += len(utils.lang_dict_informal(utils.title(post)))
-        # article title
-        form += len(utils.lang_dict_formal(utils.article(post)))
-        inf += len(utils.lang_dict_informal(utils.article(post)))
-        # description article
-        form += len(utils.lang_dict_formal(utils.description(post)))
-        inf += len(utils.lang_dict_informal(utils.description(post)))
-        # keywords article
-        form += len(utils.lang_dict_formal(utils.keywords(post)))
-        inf += len(utils.lang_dict_informal(utils.keywords(post)))
-        # paragraphs article
-        form += len(utils.lang_dict_formal(utils.paragraphs(post)))
-        inf += len(utils.lang_dict_informal(utils.paragraphs(post)))
-        # captions article
-        form += len(utils.lang_dict_formal(utils.captions(post)))
-        inf += len(utils.lang_dict_informal(utils.captions(post)))
-
-        return form, inf
-
-    def get_formal_informal_words_ratio_features(self, post):
-
-        form, inform = self.get_no_of_formal_informal_words_features(post)
-        total = form + inform
-
-        if total == 0:
-            return 0, 0
-        else:
-            return form/total, inform/total
-
     def get_difference_features_list(self, lst):
         features_lst = []
         for i in range(len(lst)):
@@ -223,6 +185,7 @@ class LinguisticAnalysisFeatures:
 
     def get_title_patterns(self, post):
         return utils.article_title_patterns(utils.article(post))
+
 
     def get_POS_counts(self, post):
         return utils.POS_counts(utils.article(post))

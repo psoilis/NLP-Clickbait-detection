@@ -9,9 +9,7 @@ from utils import utils
 from pycorenlp import StanfordCoreNLP
 
 
-image_features = imf.ImageFeatures()
 linguistic_features = laf.LinguisticAnalysisFeatures()
-abuser_features = adf.AbuserDetectionFeatures()
 
 def main():
     with open('dataset/instances.jsonl', 'rb') as f:
@@ -27,7 +25,7 @@ def main():
             # Extracting sample label
             post_label = utils.post_label_extraction(post_id)
             # Presence of image in a post
-            has_image = image_features.image_presence(post)
+            has_image = imf.image_presence(post)
             # Number of characters
             len_chars_post_title, len_chars_article_title, len_chars_article_desc, len_chars_article_keywords = \
                 linguistic_features.get_no_of_characters_features(post)
@@ -51,32 +49,32 @@ def main():
             ratio_words_article_title_article_desc, ratio_words_article_title_article_keywords, ratio_words_article_desc_article_keywords = \
                 linguistic_features.get_no_of_words_ratio_features(post)
             # Post creation hour
-            post_creation_hour = abuser_features.get_post_creation_hour(post)
+            post_creation_hour = adf.get_post_creation_hour(post)
             # Number of sings
-            post_title_no_signs = abuser_features.get_no_signs(post_title)
+            post_title_no_signs = adf.get_no_signs(post_title)
             # Number of hashtags
-            post_title_no_hashtags = abuser_features.get_no_hashtags(post_title)
+            post_title_no_hashtags = adf.get_no_hashtags(post_title)
             # Number of exclamations
-            post_title_no_exclamations = abuser_features.get_no_exclamations(post_title)
-            article_title_no_exclamations = abuser_features.get_no_exclamations(article_title)
+            post_title_no_exclamations = adf.get_no_exclamations(post_title)
+            article_title_no_exclamations = adf.get_no_exclamations(article_title)
             # Number of question marks
-            post_title_no_questionmarks = abuser_features.get_no_questionmarks(post_title)
-            article_title_no_questionmarks = abuser_features.get_no_questionmarks(article_title)
+            post_title_no_questionmarks = adf.get_no_questionmarks(post_title)
+            article_title_no_questionmarks = adf.get_no_questionmarks(article_title)
             # Number of abbreviations
-            post_title_no_abbreviations = abuser_features.get_no_abbreviations(post_title)
-            article_title_no_abbreviations = abuser_features.get_no_abbreviations(article_title)
+            post_title_no_abbreviations = adf.get_no_abbreviations(post_title)
+            article_title_no_abbreviations = adf.get_no_abbreviations(article_title)
             # Number of ellipses
-            post_title_no_ellipses = abuser_features.get_no_ellipses(post_title)
-            article_title_no_ellipses = abuser_features.get_no_ellipses(article_title)
+            post_title_no_ellipses = adf.get_no_ellipses(post_title)
+            article_title_no_ellipses = adf.get_no_ellipses(article_title)
             # Number of dots
-            post_title_no_dots = abuser_features.get_no_dots(post_title)
-            article_title_no_dots = abuser_features.get_no_dots(article_title)
+            post_title_no_dots = adf.get_no_dots(post_title)
+            article_title_no_dots = adf.get_no_dots(article_title)
             # Begins with interrogative
-            post_title_begins_with_interrogative = abuser_features.get_begins_with_interrogative(post_title)
-            article_title_begins_with_interrogative = abuser_features.get_begins_with_interrogative(article_title)
+            post_title_begins_with_interrogative = adf.get_begins_with_interrogative(post_title)
+            article_title_begins_with_interrogative = adf.get_begins_with_interrogative(article_title)
             # Begins with number
-            post_title_begins_with_number = abuser_features.get_begins_with_number(post_title)
-            article_title_begins_with_number = abuser_features.get_begins_with_number(article_title)
+            post_title_begins_with_number = adf.get_begins_with_number(post_title)
+            article_title_begins_with_number = adf.get_begins_with_number(article_title)
             # Contains determiners and possessives
             post_title_determiners, post_title_possessives = linguistic_features.get_det_poses(post, 'title')
             # Contains hyperbolic words
@@ -244,39 +242,33 @@ def test_functions(post):
     # Activity Based Characteristics
     post_title = utils.title(post)
     print("Post title: ", post_title)
-    post_title_signs = abuser_features.get_no_signs(post_title)
+    post_title_signs = adf.get_no_signs(post_title)
     print("Post title @ Signs: ", post_title_signs)
-    post_title_hashtags = abuser_features.get_no_hashtags(post_title)
+    post_title_hashtags = adf.get_no_hashtags(post_title)
     print("Post title # Hashtags: ", post_title_hashtags)
-    # post_title_punctuation = abuser_features.get_no_punctuation(post_title)
+    # post_title_punctuation = adf.get_no_punctuation(post_title)
     # print("Post title Punctuation: ", post_title_punctuation)
     article_paragraphs = utils.paragraphs(post)
     print("Article paragraphs: ", article_paragraphs)
-    article_paragraphs_signs = abuser_features.get_no_signs(article_paragraphs)
+    article_paragraphs_signs = adf.get_no_signs(article_paragraphs)
     print("Article paragraphs @ Signs: ", article_paragraphs_signs)
-    article_paragraphs_hashtags = abuser_features.get_no_hashtags(article_paragraphs)
+    article_paragraphs_hashtags = adf.get_no_hashtags(article_paragraphs)
     print("Article paragraphs # Hashtags: ", article_paragraphs_hashtags)
-    # article_paragraphs_punctuation = abuser_features.get_no_punctuation(post_title)
+    # article_paragraphs_punctuation = adf.get_no_punctuation(post_title)
     # print("Article paragraphs Punctuation: ", article_paragraphs_punctuation)
     # Article Properties
     article_keywords = utils.keywords(post)
     print("Article Keywords: ", article_keywords)
-    article_keywords_count = abuser_features.get_no_keywords(article_keywords)
-    print("Article keyword count: ", article_keywords_count)
     article_paragraphs = utils.paragraphs(post)
     print("Article paragraphs: ", article_paragraphs)
-    article_paragraphs_count = abuser_features.get_no_paragraphs(article_paragraphs)
-    print("Article paragraph count: ", article_paragraphs_count)
     article_captions = utils.captions(post)
     print("Article captions: ", article_captions)
-    article_captions_count = abuser_features.get_no_captions(article_captions)
-    print("Article paragraph count: ", article_captions_count)
     ## Post Longevity
     # post_timestamp = datetime.strptime(utils.timestamp(post), '%a %b %d %H:%M:%S %z %Y')
     # print("Post timestamp: ", post_timestamp)
-    # post_longevity = abuser_features.get_post_longevity(post_timestamp)
+    # post_longevity = adf.get_post_longevity(post_timestamp)
     # print("Post longevity in minutes: ", post_longevity)
-    # post_creation_slot = abuser_features.get_post_creation_hour(post_timestamp)
+    # post_creation_slot = adf.get_post_creation_hour(post_timestamp)
     # print("Post Creation slot: ", post_creation_slot)
 
     # common phrases test
