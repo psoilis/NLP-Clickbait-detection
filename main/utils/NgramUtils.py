@@ -4,9 +4,9 @@ from nltk import ngrams
 from utils import utils
 
 
-def get_ngram_corpus(n):
+def get_ngram_corpus(n, threshold):
 
-    ng = {}
+    counts = {}
 
     with open('dataset/instances.jsonl', 'rb') as f:
         for post in json_lines.reader(f):
@@ -17,8 +17,12 @@ def get_ngram_corpus(n):
 
                 k = re.sub(r'[^a-zA-Z0-9 ]+', '', (" ".join(g))).lower()
 
-                if k not in ng.keys():
-                    ng[k] = 0
+                if k in counts.keys():
+                    counts[k] += 1
+                else:
+                    counts[k] = 1
+
+    ng = {k: 0 for k, v in counts.items() if v > threshold}
 
     return ng
 

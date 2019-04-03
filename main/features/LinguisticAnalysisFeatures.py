@@ -227,7 +227,7 @@ class LinguisticAnalysisFeatures:
     def get_POS_counts(self, post):
         return utils.POS_counts(utils.article(post))
 
-    def get_ngram_counts(self, post, n):
+    def get_ngram_counts(self, post, n, threshold):
         """
         :arg: post => the post that we want to extract the features from
         :arg: n => the n in n-gram
@@ -235,7 +235,7 @@ class LinguisticAnalysisFeatures:
         :return: the n gram feature vector of the post
         """
         if not self.ngram_corpus or self.n != n:
-            self.ngram_corpus = NgramUtils.get_ngram_corpus(n).copy()
+            self.ngram_corpus = NgramUtils.get_ngram_corpus(n, threshold).copy()
             self.n = n
         return NgramUtils.get_ngram_feature_vector(post, self.n, self.ngram_corpus)
 
