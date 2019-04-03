@@ -12,7 +12,10 @@ from pycorenlp import StanfordCoreNLP
 linguistic_features = laf.LinguisticAnalysisFeatures()
 
 def main():
+    # Loading truth file to extract labels
+    lab = open('dataset/truth.jsonl', 'rb')
     with open('dataset/instances.jsonl', 'rb') as f:
+        f.readline()
         headers = False
         count = 0  # elements processed
         for post in json_lines.reader(f):
@@ -23,7 +26,8 @@ def main():
             post_title = utils.title(post)
             article_title = utils.article(post)
             # Extracting sample label
-            post_label = utils.post_label_extraction(post_id)
+            label_line = lab.readline()
+            post_label = utils.post_label_extraction(label_line)
             # Presence of image in a post
             has_image = imf.image_presence(post)
             # Number of characters
@@ -80,7 +84,8 @@ def main():
             # Contains hyperbolic words
             try:
                 nlp = StanfordCoreNLP('http://localhost:9000')
-                post_title_hyperbolics = sf.get_hyperbolic_words_feature(nlp, post)
+                # post_title_hyperbolics = sf.get_hyperbolic_words_feature(nlp, post)
+                post_title_hyperbolics = 0
             except:
                 print("\nServer is not up!")
             # Sentiment polarity
@@ -118,13 +123,13 @@ def main():
             pattern_nnpt = int(patterns_POS[1] is True)
             feature_output += ',' + str(pattern_nnpv) + ',' + str(pattern_nnpt)
             # N-gram extraction
-            unigrams = linguistic_features.get_ngram_counts(post, 1, 9)
+            unigrams = linguistic_features.get_ngram_counts(post, 1, 90)
             for key, value in unigrams.items():
                 feature_output += ',' + str(value)
-            bigrams = linguistic_features.get_ngram_counts(post, 2, 5)
+            bigrams = linguistic_features.get_ngram_counts(post, 2, 50)
             for key, value in bigrams.items():
                 feature_output += ',' + str(value)
-            trigrams = linguistic_features.get_ngram_counts(post, 3, 5)
+            trigrams = linguistic_features.get_ngram_counts(post, 3, 50)
             for key, value in trigrams.items():
                 feature_output += ',' + str(value)
             # If first sample, write the file headers first

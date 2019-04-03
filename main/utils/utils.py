@@ -1,6 +1,6 @@
 from nltk import word_tokenize, pos_tag
 from collections import Counter
-import json_lines
+import json
 
 
 def img(post):
@@ -188,14 +188,11 @@ def POS_counts(text):
     return cdict
 
 
-def post_label_extraction(id):
-    with open('dataset/truth.jsonl', 'rb') as label_file:
-        for data in json_lines.reader(label_file):
-            truth_id = post_id(data)
-            if id == truth_id:
-                label = truth_label(data)
-                break
-        if label == 'no-clickbait':
-            return 0
-        elif label == 'clickbait':
-            return 1
+def post_label_extraction(line):
+    my_json = line.decode('utf8')
+    data = json.loads(my_json)
+    label = truth_label(data)
+    if label == 'no-clickbait':
+        return 0
+    elif label == 'clickbait':
+        return 1
