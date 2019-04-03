@@ -196,19 +196,13 @@ class LinguisticAnalysisFeatures:
         Calculates the ngram features of the post
         :return: the n gram feature vector of the post
         """
-<<<<<<< HEAD
+
         if not self.ngram_corpus[n]:
             self.ngram_corpus[n] = NgramUtils.get_ngram_corpus(n, threshold).copy()
             print(self.ngram_corpus[n])
 
         return NgramUtils.get_ngram_feature_vector(post, n, self.ngram_corpus)
-=======
-        if not self.ngram_corpus or self.n != n:
-            print('corpus')
-            self.ngram_corpus = NgramUtils.get_ngram_corpus(n, threshold).copy()
-            self.n = n
-        return NgramUtils.get_ngram_feature_vector(post, self.n, self.ngram_corpus)
->>>>>>> master
+
 
 
 
