@@ -8,7 +8,7 @@ def get_ngram_corpus(n, threshold):
 
     counts = {}
 
-    with open('../dataset/instances.jsonl', 'rb') as f:
+    with open('dataset/instances.jsonl', 'rb') as f:
         for post in json_lines.reader(f):
 
             grams = ngrams((utils.title(post)[0]).split(), n)

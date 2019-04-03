@@ -26,7 +26,7 @@ def main():
             article_title = utils.article(post)
             # Extracting sample label
             post_label = utils.post_label_extraction(post_id)
-            # Presense of image in a post
+            # Presence of image in a post
             has_image = image_features.image_presence(post)
             # Number of characters
             len_chars_post_title, len_chars_article_title, len_chars_article_desc, len_chars_article_keywords = \
@@ -59,7 +59,7 @@ def main():
             # Number of exclamations
             post_title_no_exclamations = abuser_features.get_no_exclamations(post_title)
             article_title_no_exclamations = abuser_features.get_no_exclamations(article_title)
-            # Number of questionmarks
+            # Number of question marks
             post_title_no_questionmarks = abuser_features.get_no_questionmarks(post_title)
             article_title_no_questionmarks = abuser_features.get_no_questionmarks(article_title)
             # Number of abbreviations
@@ -114,13 +114,13 @@ def main():
             for key, value in counts_POS.items():
                 feature_output += ',' + str(value)
             # N-gram extraction
-            unigrams = linguistic_features.get_ngram_counts(post, 1)
+            unigrams = linguistic_features.get_ngram_counts(post, 1, 2)
             for key, value in unigrams.items():
                 feature_output += ',' + str(value)
-            bigrams = linguistic_features.get_ngram_counts(post, 2)
+            bigrams = linguistic_features.get_ngram_counts(post, 2, 2)
             for key, value in bigrams.items():
                 feature_output += ',' + str(value)
-            trigrams = linguistic_features.get_ngram_counts(post, 3)
+            trigrams = linguistic_features.get_ngram_counts(post, 3, 2)
             for key, value in trigrams.items():
                 feature_output += ',' + str(value)
             # If first sample, write the file headers first
