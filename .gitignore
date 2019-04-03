@@ -15,5 +15,6 @@ dataset/
 utils/
 features/
 .DS_Store
+main/kmain.py
 main/classification/__pycache__/
 
