@@ -23,9 +23,9 @@ def get_ngram_corpus(n):
     return ng
 
 
-def get_ngram_feature_vector(post, n, ngram_word_corpus):
+def get_ngram_feature_vector(post, n, ngram_word_corpus: dict):
 
-    ngram_feature_vector = ngram_word_corpus
+    ngram_feature_vector = ngram_word_corpus.copy()
 
     grams = ngrams((utils.title(post)[0]).split(), n)
 

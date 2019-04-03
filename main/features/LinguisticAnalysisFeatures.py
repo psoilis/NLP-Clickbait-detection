@@ -231,9 +231,9 @@ class LinguisticAnalysisFeatures:
         :return: the n gram feature vector of the post
         """
         if not self.ngram_corpus or self.n != n:
-            self.ngram_corpus = NgramUtils.get_ngram_corpus(n)
+            self.ngram_corpus = NgramUtils.get_ngram_corpus(n).copy()
             self.n = n
-        return NgramUtils.get_ngram_feature_vector(post, n, self.ngram_corpus)
+        return NgramUtils.get_ngram_feature_vector(post, self.n, self.ngram_corpus)
 
 
 
