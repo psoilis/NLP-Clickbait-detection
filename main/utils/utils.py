@@ -76,7 +76,7 @@ def len_characters(content):
             # string case
             chars_len = len(content)
 
-    return chars_len
+    return chars_len if chars_len != 0 else -1
 
 
 def len_words(content):
@@ -94,7 +94,7 @@ def len_words(content):
             # string case
             words = content.split(" ")
             words_len = len(words)
-    return words_len
+    return words_len if words_len != 0 else -1
 
 
 def words(content):
