@@ -111,14 +111,20 @@ def main():
             counts_POS = linguistic_features.get_POS_counts(post)
             for key, value in counts_POS.items():
                 feature_output += ',' + str(value)
+            # POS patterns extraction
+            patterns_POS = linguistic_features.get_title_patterns(post)
+            # Convert True/False to 0/1
+            pattern_nnpv = int(patterns_POS[0] is True)
+            pattern_nnpt = int(patterns_POS[1] is True)
+            feature_output += ',' + str(pattern_nnpv) + ',' + str(pattern_nnpt)
             # N-gram extraction
-            unigrams = linguistic_features.get_ngram_counts(post, 1, 2)
+            unigrams = linguistic_features.get_ngram_counts(post, 1, 9)
             for key, value in unigrams.items():
                 feature_output += ',' + str(value)
-            bigrams = linguistic_features.get_ngram_counts(post, 2, 2)
+            bigrams = linguistic_features.get_ngram_counts(post, 2, 5)
             for key, value in bigrams.items():
                 feature_output += ',' + str(value)
-            trigrams = linguistic_features.get_ngram_counts(post, 3, 2)
+            trigrams = linguistic_features.get_ngram_counts(post, 3, 5)
             for key, value in trigrams.items():
                 feature_output += ',' + str(value)
             # If first sample, write the file headers first
@@ -141,6 +147,7 @@ def main():
                                   'Article_Title_No_Abbrev,Post_Title_No_Ellipses,Article_Title_No_Ellipses,Post_Title_No_Dots,Article_Title_No_Dots'
                 for key, value in counts_POS.items():
                     feature_headers += ',' + key
+                feature_headers += ',NNPV,NNPT'
                 for key, value in unigrams.items():
                     feature_headers += ',' + key
                 for key, value in bigrams.items():
