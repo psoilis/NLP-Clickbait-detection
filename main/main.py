@@ -10,8 +10,8 @@ from pycorenlp import StanfordCoreNLP
 
 
 def main():
-    # Loading truth file to extract labels
-    lab = open('dataset/truth.jsonl', 'rb')
+    # Creating label dictionary
+    labels = utils.get_label_dict()
     with open('dataset/instances.jsonl', 'rb') as f:
         headers = False
         count = 0  # elements processed
@@ -23,8 +23,7 @@ def main():
             post_title = utils.title(post)
             article_title = utils.article(post)
             # Extracting sample label
-            label_line = lab.readline()
-            post_label = utils.post_label_extraction(label_line)
+            post_label = labels[post_id]
             # Presence of image in a post
             has_image = imf.image_presence(post)
             # Number of characters
