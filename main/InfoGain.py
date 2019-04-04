@@ -1,25 +1,27 @@
 from sklearn import feature_selection
 import pandas as pd
 
-df = pd.read_csv("../dataset/features_small_file.csv")
+df = pd.read_csv("../dataset/features_large.csv")
 
 y = df['Label'].values
 
 X = df.loc[:, ~df.columns.isin(['Label', 'Post_ID'])].values
 
-discrete = [True]*11 + [False] + [True]*10 + [False]*6 + [True]*10 + [False]*6 + [True]*(len(df.columns)-46)
+discrete = [True]*11 + [False] + [True]*3 + [False] + [True]*2 + [False] + [True] + [False]*8 + [True]*3 + [False] + \
+           [True]*2 + [False] + [True] + [False]*8 + [True]*(len(df.columns)-46)
 
-res_sk = feature_selection.mutual_info_classif(X, y)
+res_sk = feature_selection.mutual_info_classif(X, y, discrete_features=discrete)
 
 rdf = pd.DataFrame(list(dict(zip(df.columns[2:-1], res_sk)).items()), columns=['Feature', 'Info_Gain'])\
     .sort_values(by='Info_Gain', ascending=False)
 
 rdf.to_csv("../dataset/info_gain.csv")
 ########################################################################################################################
+"""""""""
 Xngrams = df.iloc[:, 74:-1]
 dngrams = [True]*len(Xngrams.columns)
 
-res_ng = feature_selection.mutual_info_classif(Xngrams.values, y)
+res_ng = feature_selection.mutual_info_classif(Xngrams.values, y, discrete_features=dngrams )
 
 rdf_ng = pd.DataFrame(list(dict(zip(Xngrams.columns, res_ng)).items()), columns=['Feature', 'Info_Gain'])\
     .sort_values(by='Info_Gain', ascending=False)
@@ -35,9 +37,10 @@ y = df_top_ngrams['Label'].values
 
 X = df_top_ngrams.loc[:, ~df_top_ngrams.columns.isin(['Label', 'Post_ID'])].values
 
-#discrete = [True]*11 + [False] + [True]*10 + [False]*6 + [True]*10 + [False]*6 + [True]*(len(df_top_ngrams.columns)-46)
+discrete = [True]*11 + [False] + [True]*3 + [False] + [True]*2 + [False] + [True] + [False]*8 + [True]*3 + [False] + \
+           [True]*2 + [False] + [True] + [False]*8 + [True]*(len(df_top_ngrams.columns)-46)
 
-res_sk = feature_selection.mutual_info_classif(X, y,)
+res_sk = feature_selection.mutual_info_classif(X, y, discrete_features=discrete)
 
 rdf = pd.DataFrame(list(dict(zip(df_top_ngrams.columns[2:-1], res_sk)).items()), columns=['Feature', 'Info_Gain'])\
     .sort_values(by='Info_Gain', ascending=False)
@@ -45,7 +48,7 @@ rdf = pd.DataFrame(list(dict(zip(df_top_ngrams.columns[2:-1], res_sk)).items()),
 rdf.to_csv("../dataset/info_gain_top_ngrams.csv")
 # print(rdf_ng)
 #rdf_ng.to_csv("../dataset/info_gain_ngram.csv")
-
+"""""""""
 """""""""
 ########################################################################################################################
 
