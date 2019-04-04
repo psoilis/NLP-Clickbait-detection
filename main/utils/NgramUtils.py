@@ -15,12 +15,16 @@ def get_ngram_corpus(n, threshold):
 
             for g in grams:
 
-                k = re.sub(r'[^a-zA-Z0-9 ]+', '', (" ".join(g))).lower()
+                k = re.sub(r'[^a-zA-Z0-9 ]+', '', (" ".join(g)))
 
-                if k in counts.keys():
-                    counts[k] += 1
-                else:
-                    counts[k] = 1
+                if utils.POS_counts(k)['NNP'] == 0:
+
+                    k = k.lower()
+
+                    if k in counts.keys():
+                        counts[k] += 1
+                    else:
+                        counts[k] = 1
 
     ng = {k: 0 for k, v in counts.items() if v > threshold}
 
@@ -35,9 +39,13 @@ def get_ngram_feature_vector(post, n, ngram_word_corpus: dict):
 
     for g in grams:
 
-        k = re.sub(r'[^a-zA-Z0-9 ]+', '', (" ".join(g))).lower()
+        k = re.sub(r'[^a-zA-Z0-9 ]+', '', (" ".join(g)))
 
-        if k in ngram_feature_vector.keys():
-            ngram_feature_vector[k] += 1
+        if utils.POS_counts(k)['NNP'] == 0:
+
+            k = k.lower()
+
+            if k in ngram_feature_vector.keys():
+                ngram_feature_vector[k] += 1
 
     return ngram_feature_vector

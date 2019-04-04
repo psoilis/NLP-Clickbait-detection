@@ -1,32 +1,39 @@
 from sklearn import feature_selection
 import pandas as pd
 
-df = pd.read_csv("../dataset/features_large.csv")
+
+tp = pd.read_csv("../dataset/features_large2.csv", iterator=True, chunksize=1000)
+df = pd.concat(tp, ignore_index=True)
 
 y = df['Label'].values
-
+""""""""""
 X = df.loc[:, ~df.columns.isin(['Label', 'Post_ID'])].values
 
+col = df.columns
+
+del df
+
 discrete = [True]*11 + [False] + [True]*3 + [False] + [True]*2 + [False] + [True] + [False]*8 + [True]*3 + [False] + \
-           [True]*2 + [False] + [True] + [False]*8 + [True]*(len(df.columns)-46)
+           [True]*2 + [False] + [True] + [False]*8 + [True]*(len(col)-46)
 
 res_sk = feature_selection.mutual_info_classif(X, y, discrete_features=discrete)
 
-rdf = pd.DataFrame(list(dict(zip(df.columns[2:-1], res_sk)).items()), columns=['Feature', 'Info_Gain'])\
+rdf = pd.DataFrame(list(dict(zip(col[2:-1], res_sk)).items()), columns=['Feature', 'Info_Gain'])\
     .sort_values(by='Info_Gain', ascending=False)
 
 rdf.to_csv("../dataset/info_gain.csv")
-########################################################################################################################
 """""""""
+########################################################################################################################
+
 Xngrams = df.iloc[:, 74:-1]
 dngrams = [True]*len(Xngrams.columns)
 
-res_ng = feature_selection.mutual_info_classif(Xngrams.values, y, discrete_features=dngrams )
+res_ng = feature_selection.mutual_info_classif(Xngrams.values, y, discrete_features=dngrams)
 
 rdf_ng = pd.DataFrame(list(dict(zip(Xngrams.columns, res_ng)).items()), columns=['Feature', 'Info_Gain'])\
     .sort_values(by='Info_Gain', ascending=False)
 
-
+"""""""""
 top_ngrams = 40
 
 non_top_ngrams = list(rdf_ng['Feature'].values[top_ngrams-1:-1])
@@ -46,12 +53,11 @@ rdf = pd.DataFrame(list(dict(zip(df_top_ngrams.columns[2:-1], res_sk)).items()),
     .sort_values(by='Info_Gain', ascending=False)
 
 rdf.to_csv("../dataset/info_gain_top_ngrams.csv")
+"""""""""
 # print(rdf_ng)
-#rdf_ng.to_csv("../dataset/info_gain_ngram.csv")
-"""""""""
-"""""""""
+rdf_ng.to_csv("../dataset/info_gain_ngram.csv")
 ########################################################################################################################
-
+"""""""""
 Xwongrams = df.iloc[:, 2:73]
 dwongrams = [True]*11 + [False] + [True]*10 + [False]*6 + [True]*10 + [False]*6 + [True]*(len(Xwongrams.columns)-44)
 
@@ -64,12 +70,9 @@ rdf_wong = pd.DataFrame(list(dict(zip(Xwongrams.columns, res_wong)).items()), co
 rdf_wong.to_csv("../dataset/info_gain_without_ngram.csv")
 ########################################################################################################################
 
-
 n = 10
 
 keep = ['Label', 'Post_ID'] + list(rdf['Feature'].values[0:n-1])
 
 selected_features = df.loc[:, df.columns.isin(keep)]
-
-selected_features.to_csv("../dataset/final_selected_features.csv")
 """""""""
