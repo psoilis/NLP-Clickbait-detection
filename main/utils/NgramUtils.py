@@ -39,13 +39,9 @@ def get_ngram_feature_vector(post, n, ngram_word_corpus: dict):
 
     for g in grams:
 
-        k = re.sub(r'[^a-zA-Z0-9 ]+', '', (" ".join(g)))
+        k = re.sub(r'[^a-zA-Z0-9 ]+', '', (" ".join(g))).lower()
 
-        if utils.POS_counts(k)['NNP'] == 0:
-
-            k = k.lower()
-
-            if k in ngram_feature_vector.keys():
-                ngram_feature_vector[k] += 1
+        if k in ngram_feature_vector.keys():
+            ngram_feature_vector[k] += 1
 
     return ngram_feature_vector

@@ -9,8 +9,6 @@ from utils import utils
 from pycorenlp import StanfordCoreNLP
 
 
-linguistic_features = laf.LinguisticAnalysisFeatures()
-
 def main():
     # Loading truth file to extract labels
     lab = open('dataset/truth.jsonl', 'rb')
@@ -31,26 +29,26 @@ def main():
             has_image = imf.image_presence(post)
             # Number of characters
             len_chars_post_title, len_chars_article_title, len_chars_article_desc, len_chars_article_keywords = \
-                linguistic_features.get_no_of_characters_features(post)
+                laf.get_no_of_characters_features(post)
             # Difference between number of characters
             diff_chars_post_title_article_title, diff_chars_post_title_article_desc, diff_chars_post_title_article_keywords, \
             diff_chars_article_title_article_desc, diff_chars_article_title_article_keywords, diff_chars_article_desc_article_keywords = \
-                linguistic_features.get_diff_between_no_of_characters_features(post)
+                laf.get_diff_between_no_of_characters_features(post)
             # Number of characters ratio
             ratio_chars_post_title_article_title, ratio_chars_post_title_article_desc, ratio_chars_post_title_article_keywords, \
             ratio_chars_article_title_article_desc, ratio_chars_article_title_article_keywords, ratio_chars_article_desc_article_keywords = \
-                linguistic_features.get_no_of_characters_ratio_features(post)
+                laf.get_no_of_characters_ratio_features(post)
             # Number of Words
             len_words_post_title, len_words_article_title, len_words_article_desc, len_words_article_keywords = \
-                linguistic_features.get_no_of_characters_features(post)
+                laf.get_no_of_characters_features(post)
             # Difference between number of words
             diff_words_post_title_article_title, diff_words_post_title_article_desc, diff_words_post_title_article_keywords, \
             diff_words_article_title_article_desc, diff_words_article_title_article_keywords, diff_words_article_desc_article_keywords = \
-                linguistic_features.get_diff_between_no_of_words_features(post)
+                laf.get_diff_between_no_of_words_features(post)
             # Number of words ratio
             ratio_words_post_title_article_title, ratio_words_post_title_article_desc, ratio_words_post_title_article_keywords, \
             ratio_words_article_title_article_desc, ratio_words_article_title_article_keywords, ratio_words_article_desc_article_keywords = \
-                linguistic_features.get_no_of_words_ratio_features(post)
+                laf.get_no_of_words_ratio_features(post)
             # Post creation hour
             post_creation_hour = adf.get_post_creation_hour(post)
             # Number of sings
@@ -79,7 +77,7 @@ def main():
             post_title_begins_with_number = adf.get_begins_with_number(post_title)
             article_title_begins_with_number = adf.get_begins_with_number(article_title)
             # Contains determiners and possessives
-            post_title_determiners, post_title_possessives = linguistic_features.get_det_poses(post, 'title')
+            post_title_determiners, post_title_possessives = laf.get_det_poses(post, 'title')
             # Contains hyperbolic words
             try:
                 nlp = StanfordCoreNLP('http://localhost:9000')
@@ -89,9 +87,9 @@ def main():
             # Sentiment polarity
             post_title_sentiment = sf.get_sentiment_polarity_feature(post)
             # Contains common clickbait phrases
-            post_title_common_phr = linguistic_features.get_common_clickbait_phrases_feature(post)  # everything zero
+            post_title_common_phr = laf.get_common_clickbait_phrases_feature(post)  # everything zero
             # Contains Internet slangs
-            post_title_slang = linguistic_features.get_slang_words_feature(post)  # have to make it exact match and not in work
+            post_title_slang = laf.get_slang_words_feature(post)  # have to make it exact match and not in work
             # Writing line to file (could write them in batches to improve performance)
             feature_output = post_id + ',' + str(post_label) + ',' + str(has_image) + ',' + str(post_creation_hour) + ',' + str(post_title_begins_with_interrogative)\
                 + ',' + str(article_title_begins_with_interrogative) + ',' + str(post_title_begins_with_number) + ',' + str(article_title_begins_with_number)  \
@@ -111,23 +109,23 @@ def main():
                 + ',' + str(article_title_no_questionmarks) + ',' + str(post_title_no_abbreviations) + ',' + str(article_title_no_abbreviations) + ',' + str(post_title_no_ellipses)\
                 + ',' + str(article_title_no_ellipses) + ',' + str(post_title_no_dots) + ',' + str(article_title_no_dots)
             # POS tags extraction
-            counts_POS = linguistic_features.get_POS_counts(post)
+            counts_POS = laf.get_POS_counts(post)
             for key, value in counts_POS.items():
                 feature_output += ',' + str(value)
             # POS patterns extraction
-            patterns_POS = linguistic_features.get_title_patterns(post)
+            patterns_POS = laf.get_title_patterns(post)
             # Convert True/False to 0/1
             pattern_nnpv = int(patterns_POS[0] is True)
             pattern_nnpt = int(patterns_POS[1] is True)
             feature_output += ',' + str(pattern_nnpv) + ',' + str(pattern_nnpt)
             # N-gram extraction
-            unigrams = linguistic_features.get_ngram_counts(post, 1, 2)
+            unigrams = laf.get_ngram_counts(post, 1, 3)
             for key, value in unigrams.items():
                 feature_output += ',' + str(value)
-            bigrams = linguistic_features.get_ngram_counts(post, 2, 2)
+            bigrams = laf.get_ngram_counts(post, 2, 3)
             for key, value in bigrams.items():
                 feature_output += ',' + str(value)
-            trigrams = linguistic_features.get_ngram_counts(post, 3, 2)
+            trigrams = laf.get_ngram_counts(post, 3, 3)
             for key, value in trigrams.items():
                 feature_output += ',' + str(value)
             # If first sample, write the file headers first
@@ -234,17 +232,17 @@ def test_functions(post):
         "targetCaptions": [],
         "targetParagraphs": []
     }
-    features = linguistic_features.get_no_of_characters_features(test_dict)
+    features = laf.get_no_of_characters_features(test_dict)
     print("No of chars features: ", features)
-    features = linguistic_features.get_no_of_characters_features(test_dict_empty)
+    features = laf.get_no_of_characters_features(test_dict_empty)
     print("No of chars features (empty): ", features)
-    features = linguistic_features.get_no_of_words_features(test_dict)
+    features = laf.get_no_of_words_features(test_dict)
     print("No of words features: ", features)
-    features = linguistic_features.get_no_of_words_features(test_dict_empty)
+    features = laf.get_no_of_words_features(test_dict_empty)
     print("No of words features (empty): ", features)
-    features = linguistic_features.get_diff_between_no_of_words_features(test_dict)
+    features = laf.get_diff_between_no_of_words_features(test_dict)
     print("Diff of no of words features: ", features)
-    features = linguistic_features.get_diff_between_no_of_words_features(test_dict_empty)
+    features = laf.get_diff_between_no_of_words_features(test_dict_empty)
     print("Diff of no of words features: (empty) ", features)
     print("========================================================================")
 	
@@ -288,18 +286,18 @@ def test_functions(post):
     test_dict_clicbait = {
         "postText": "Can't Even Handle this workout!",
     }
-    clickbait_feat = linguistic_features.get_common_clickbait_phrases_feature(test_dict)
+    clickbait_feat = laf.get_common_clickbait_phrases_feature(test_dict)
     print("Clickbait phrase: ", clickbait_feat)
-    clickbait_feat = linguistic_features.get_common_clickbait_phrases_feature(test_dict_clicbait)
+    clickbait_feat = laf.get_common_clickbait_phrases_feature(test_dict_clicbait)
     print("Clickbait phrase: ", clickbait_feat)
 
     # slang abbreviations test
     test_dict = {"postText": "tyri kai psomi"}  # "ty" exists but not as an exact match
     test_dict_slang = {"postText": "Ty for helping me"}
 
-    slang_feat = linguistic_features.get_slang_words_feature(test_dict)
+    slang_feat = laf.get_slang_words_feature(test_dict)
     print("Slang feat: ", slang_feat)
-    slang_feat = linguistic_features.get_slang_words_feature(test_dict_slang)
+    slang_feat = laf.get_slang_words_feature(test_dict_slang)
     print("Slang feat: ", slang_feat)
     # hyperbolic words
     try:
