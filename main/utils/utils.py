@@ -136,7 +136,7 @@ def determiners_possessives_bool(content):
         if t[1] == "DT":
             # determiner
             d_flag = 1
-        elif t[1] == "PRP$":
+        elif t[1] == "PRP$" or t[1] == "PRP":
             # possessives
             p_flag = 1
 
@@ -192,7 +192,7 @@ def get_label_dict():
     with open('dataset/truth.jsonl', 'rb') as label_file:
         for data in json_lines.reader(label_file):
             if truth_label(data) == 'no-clickbait':
-                labels[post_id(data)] = 0;
+                labels[post_id(data)] = 0
             elif truth_label(data) == 'clickbait':
-                labels[post_id(data)] = 1;
+                labels[post_id(data)] = 1
     return labels
