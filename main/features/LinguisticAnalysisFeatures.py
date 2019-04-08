@@ -157,32 +157,69 @@ def get_det_poses(post, comp):
 
 
 def get_common_clickbait_phrases_feature(post):
-    post_title = utils.title(post)
+    """
+    Checks whether the post's text and article's title contain
+    common words/phrases
+    :param post: the current post
+    :return: a list of 0s, 1s indicating whether the fields contain
+    common words/phrases
+    """
+    post_text = utils.title(post)
+    article_title = utils.article(post)
 
+    found_in_post_text = has_common_phrases(post_text)
+    found_in_article_title = has_common_phrases(article_title)
+
+    return [found_in_post_text, found_in_article_title]
+
+
+def has_common_phrases(post_field):
+    """
+    Checks if the provided post_field contains common words/phrases
+    :param post_field: the field to be checked
+    :return: 1 if the post_field contains common words/phrases, else 0
+    """
     found = 0
     for phrase in clickbait_phrases:
-        if phrase in post_title:
+        if phrase in post_field:
             found = 1
             break
-
     return found
 
 
 def get_slang_words_feature(post):
-    post_title = utils.title(post)
+    """
+    Checks whether the post's text and article's title contain
+    slang words
+    :param post: the current post
+    :return: a list of 0s, 1s indicating whether the fields contain
+    slang words
+    """
+    post_text = utils.title(post)
+    article_title = utils.article(post)
+
+    found_in_post_text = has_slang_words(post_text)
+    found_in_article_title = has_slang_words(article_title)
+
+    return [found_in_post_text, found_in_article_title]
+
+
+def has_slang_words(post_field):
+    """
+    Checks if the provided post_field contains hyperbolic words
+    :param post_field: the field to be checked
+    :return: 1 if the post_field contains slang words, else 0
+    """
     # If list extract the element into a string
-    if isinstance(post_title, list):
-        post_title = post_title[0]
-
-    post_title = post_title.casefold()
-
+    if isinstance(post_field, list):
+        post_field = post_field[0]
+    post_field = post_field.casefold()
     found = 0
     for phrase in slang_words:
-        result = re.search(r'\b' + phrase + '\W', post_title)
+        result = re.search(r'\b' + phrase + '\W', post_field)
         if result:
             found = 1
             break
-
     return found
 
 
