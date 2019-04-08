@@ -193,13 +193,14 @@ def POS_counts(content):
     cdict = {"NNP": 0, "IN": 0, "WRB": 0, "NN": 0, "PRP": 0, "VBZ": 0, "PRP$": 0, "VBD": 0, "VBP": 0,
              "WP": 0, "DT": 0, "POS": 0, "WDT": 0, "RB": 0, "RBS": 0, "VBN": 0}
 
-    counter = dict(Counter(tag for word, tag in pos_tag(word_tokenize(text))))
-
-    # keep only the relevant tags that we need the counts from
-    for key in [key for key in counter if not key.isalpha() or key not in cdict.keys()]:
-        del counter[key]
-
-    cdict.update(counter)
+    for t in text.split(" "):
+        tag = pos_tag(word_tokenize(t))
+        if tag[0][1] in cdict.keys():
+            cdict[tag[0][1]] += 1
+        elif tag[0][1] == "NNPS":
+            cdict["NNP"] += 1
+        elif tag[0][1] == "NNS":
+            cdict["NN"] += 1
 
     return cdict
 
