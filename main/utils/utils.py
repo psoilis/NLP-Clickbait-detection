@@ -194,13 +194,17 @@ def POS_counts(content):
              "WP": 0, "DT": 0, "POS": 0, "WDT": 0, "RB": 0, "RBS": 0, "VBN": 0}
 
     for t in text.split(" "):
+
         tag = pos_tag(word_tokenize(t))
-        if tag[0][1] in cdict.keys():
-            cdict[tag[0][1]] += 1
-        elif tag[0][1] == "NNPS":
-            cdict["NNP"] += 1
-        elif tag[0][1] == "NNS":
-            cdict["NN"] += 1
+
+        if len(tag) != 0:
+
+            if tag[0][1] in cdict.keys():
+                cdict[tag[0][1]] += 1
+            elif tag[0][1] == "NNPS":
+                cdict["NNP"] += 1
+            elif tag[0][1] == "NNS":
+                cdict["NN"] += 1
 
     return cdict
 
