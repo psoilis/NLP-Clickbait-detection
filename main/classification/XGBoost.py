@@ -1,9 +1,9 @@
-import xgboost as xgb
 import pandas as pd
-from sklearn.model_selection import train_test_split
+import xgboost as xgb
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import train_test_split
 
 
 class XGBoost:
@@ -17,10 +17,10 @@ class XGBoost:
         self. xg_clf  = xgb.XGBClassifier(params=self.params)
 
     def train(self, x_train, y_train):
-        self.xg_clf .fit(x_train, y_train)
+        self.xg_clf.fit(x_train, y_train)
 
     def predict(self, x_test):
-        return self.xg_clf .predict(x_test)
+        return self.xg_clf.predict(x_test)
 
     def cross_validation(self, data_dmatrix, metric, folds):
         cv_results = xgb.cv(dtrain=data_dmatrix, params=self.params, nfold=folds,

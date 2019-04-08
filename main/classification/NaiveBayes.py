@@ -1,11 +1,9 @@
 import numpy as np
-import seaborn as sns;
 from sklearn import metrics
 from sklearn.model_selection import StratifiedKFold
 from sklearn.naive_bayes import GaussianNB
-from utils import confusion_matrix_pretty_print
 
-sns.set()
+from utils import confusion_matrix_pretty_print
 
 
 class NaiveBayes:
@@ -20,6 +18,7 @@ class NaiveBayes:
     def predict(self, data, test_labels, plot_conf=False):
         pred_labels = self.gnb.predict(data)
 
+        print(metrics.confusion_matrix(test_labels, pred_labels))
         if plot_conf:
             confusion_matrix_pretty_print.plot_confusion_matrix_from_data(test_labels, pred_labels)
 

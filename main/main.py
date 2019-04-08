@@ -110,6 +110,7 @@ def main():
                 + ',' + str(post_title_no_questionmarks) + ',' + str(article_title_no_questionmarks) + ',' + str(post_title_no_abbreviations) \
                 + ',' + str(article_title_no_abbreviations) + ',' + str(post_title_no_ellipses) + ',' + str(article_title_no_ellipses) + ',' + str(post_title_no_dots) \
                 + ',' + str(article_title_no_dots)
+
             # POS tags extraction
             counts_post_title_POS = laf.get_POS_counts(post_title)
             for key, value in counts_post_title_POS.items():
@@ -335,3 +336,26 @@ def test_functions(post):
 
 if __name__ == '__main__':
     main()
+
+import pandas as pd
+from classification import NaiveBayes
+from classification import MaximumEntropy
+from classification import RandomForest
+
+# df = pd.read_csv("dataset/final_feature_vectors.csv")
+# X = df.loc[:, ~df.columns.isin(['Label', 'Post_ID'])].values
+# y = df['Label'].values
+
+# nb = NaiveBayes.NaiveBayes()
+# nb.train(X, y)
+# results = nb.cross_validation(X, y)
+# print(results)
+
+# svm = MaximumEntropy.MaximumEntropy()
+# svm.train(X, y)
+# print(svm.cross_validation(X, y))
+
+# rf = RandomForest.RandomForest()
+# rf.train(X, y)
+# print(rf.cross_validation(X, y))
+
