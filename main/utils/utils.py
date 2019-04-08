@@ -155,6 +155,9 @@ def article_title_patterns(content):
 
     tagged_tokens = pos_tag(word_tokenize(text.lower()))
 
+    if len(tagged_tokens) == 0:
+        return False, False
+
     if tagged_tokens[0][1] != "CD":
         return False, False
 

@@ -4,7 +4,7 @@ import pandas as pd
 
 def information_gain(n):
 
-    tp = pd.read_csv("../dataset/features_finalfixed.csv", iterator=True, chunksize=1000)
+    tp = pd.read_csv("dataset/features_finalfixed.csv", iterator=True, chunksize=1000)
     df = pd.concat(tp, ignore_index=True)
 
     y = df['Label'].values
@@ -25,14 +25,14 @@ def information_gain(n):
 
     del col, x, y
 
-    rdf.to_csv("../dataset/info_gain.csv",  index=False)
+    rdf.to_csv("dataset/info_gain.csv",  index=False)
 
     keep = ['Label', 'Post_ID'] + list(rdf['Feature'].values[0:n])
 
-    tp = pd.read_csv("../dataset/features_large2.csv", iterator=True, chunksize=1000)
+    tp = pd.read_csv("dataset/features_large2.csv", iterator=True, chunksize=1000)
     df = pd.concat(tp, ignore_index=True)
 
-    df.loc[:, df.columns.isin(keep)].to_csv("../dataset/final_feature_vectors.csv",  index=False)
+    df.loc[:, df.columns.isin(keep)].to_csv("dataset/final_feature_vectors.csv",  index=False)
 
 
 information_gain(40)

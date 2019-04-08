@@ -7,6 +7,8 @@ from features import LinguisticAnalysisFeatures as laf
 from features import SentimentFeatures as sf
 from utils import utils
 from pycorenlp import StanfordCoreNLP
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def main():
@@ -129,13 +131,13 @@ def main():
             feature_output += ',' + str(post_title_pattern_nnpv) + ',' + str(post_title_pattern_nnpt)
             feature_output += ',' + str(article_title_pattern_nnpv) + ',' + str(article_title_pattern_nnpt)
             # N-gram extraction
-            unigrams = laf.get_ngram_counts(post, 1, 3, 1000)
+            unigrams = laf.get_ngram_counts(post, 1, 6, 1000)
             for key, value in unigrams.items():
                 feature_output += ',' + str(value)
-            bigrams = laf.get_ngram_counts(post, 2, 3, 1000)
+            bigrams = laf.get_ngram_counts(post, 2, 6, 200)
             for key, value in bigrams.items():
                 feature_output += ',' + str(value)
-            trigrams = laf.get_ngram_counts(post, 3, 3, 1000)
+            trigrams = laf.get_ngram_counts(post, 3, 6, 100)
             for key, value in trigrams.items():
                 feature_output += ',' + str(value)
             # If first sample, write the file headers first
@@ -178,6 +180,28 @@ def main():
             with open('dataset/features.csv', encoding='utf8', mode='a', newline='') as features_file:
                 features_writer = csv.writer(features_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
                 features_writer.writerow([feature_output])
+
+
+def plot_ngram_distribution():
+    with open('dataset/NNP/3-gram_frequencies.csv', 'r', encoding='utf8') as csvfile:
+        read_csv = csv.reader(csvfile, delimiter=',')
+        headers = False
+        ngram_counts = []
+        for ngram in read_csv:
+            if not headers:
+                headers = True
+                continue
+            ngram_counts.append(int(ngram[1]))
+        ngram_counts.sort(reverse=True)
+        plt.hist(ngram_counts, bins=range(0, 6500, 3))
+        plt.yscale('log')
+        plt.xscale('log')
+        plt.title('Trigram Distribution')
+        plt.xlabel('Ngram Count')
+        plt.ylabel('Bin Count')
+        plt.show()
+        plt.clf()
+
 
 
 ##### TESTS #####
@@ -335,6 +359,7 @@ def test_functions(post):
 
 
 if __name__ == '__main__':
+    # plot_ngram_distribution()
     main()
 
 import pandas as pd
