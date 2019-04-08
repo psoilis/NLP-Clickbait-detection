@@ -149,11 +149,11 @@ def get_ratio_features_list(lst):
     return features_lst
 
 
-def get_det_poses(post, comp):
+def get_det_poses(comp):
 
     # TODO: modular? or for all example for title bellow
     if comp == "title":
-        return utils.determiners_possessives_bool(utils.title(post))
+        return utils.determiners_possessives_bool(comp)
 
 
 def get_common_clickbait_phrases_feature(post):
@@ -227,8 +227,8 @@ def get_title_patterns(post):
     return utils.article_title_patterns(utils.article(post))
 
 
-def get_POS_counts(post):
-    return utils.POS_counts(utils.article(post))
+def get_POS_counts(comp):
+    return utils.POS_counts(comp)
 
 
 def get_ngram_counts(post, n, threshold):

@@ -143,7 +143,15 @@ def determiners_possessives_bool(content):
     return d_flag, p_flag
 
 
-def article_title_patterns(text):
+def article_title_patterns(content):
+
+    text = ""
+
+    if isinstance(content, list):
+        for t in content:
+            text += t + " "
+    else:
+        text = content
 
     tagged_tokens = pos_tag(word_tokenize(text.lower()))
 
@@ -172,7 +180,15 @@ def article_title_patterns(text):
     return nnpv, nnpt
 
 
-def POS_counts(text):
+def POS_counts(content):
+
+    text = ""
+
+    if isinstance(content, list):
+        for t in content:
+            text += t + " "
+    else:
+        text = content
 
     cdict = {"NNP": 0, "IN": 0, "WRB": 0, "NN": 0, "PRP": 0, "VBZ": 0, "PRP$": 0, "VBD": 0, "VBP": 0,
              "WP": 0, "DT": 0, "POS": 0, "WDT": 0, "RB": 0, "RBS": 0, "VBN": 0}

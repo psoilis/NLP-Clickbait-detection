@@ -1,17 +1,18 @@
 import re
 import json_lines
+import pandas as pd
 from nltk import ngrams
 from utils import utils
 
 
-def get_ngram_corpus(n, threshold):
+def get_ngram_corpus(n, lower_t, upper_t):
 
     counts = {}
 
     with open('dataset/instances.jsonl', 'rb') as f:
         for post in json_lines.reader(f):
 
-            grams = ngrams((utils.title(post)[0]).split(), n)
+            grams = ngrams((utils.article(post)).split(), n)
 
             for g in grams:
 
@@ -26,7 +27,9 @@ def get_ngram_corpus(n, threshold):
                     else:
                         counts[k] = 1
 
-    ng = {k: 0 for k, v in counts.items() if v > threshold}
+    ng = {k: 0 for k, v in counts.items() if v > lower_t and not v >= upper_t}
+
+    pd.DataFrame(counts.items(), columns=['gram', 'count']).to_csv("../dataset/"+n+"-gram_frequencies.csv", index=False)
 
     return ng
 
@@ -35,7 +38,7 @@ def get_ngram_feature_vector(post, n, ngram_word_corpus: dict):
 
     ngram_feature_vector = ngram_word_corpus.copy()
 
-    grams = ngrams((utils.title(post)[0]).split(), n)
+    grams = ngrams((utils.article(post)).split(), n)
 
     for g in grams:
 
