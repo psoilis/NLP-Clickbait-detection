@@ -4,7 +4,7 @@ import pandas as pd
 
 def information_gain(n):
 
-    tp = pd.read_csv("dataset/features_finalfixed.csv", iterator=True, chunksize=1000)
+    tp = pd.read_csv("dataset/features.csv", iterator=True, chunksize=1000)
     df = pd.concat(tp, ignore_index=True)
 
     y = df['Label'].values
@@ -15,8 +15,8 @@ def information_gain(n):
 
     del tp, df
 
-    discrete = [True]*11 + [False] + [True]*3 + [False] + [True]*2 + [False] + [True] + [False]*8 + [True]*3 + \
-               [False] + [True]*2 + [False] + [True] + [False]*8 + [True]*(len(col)-46)
+    discrete = [True]*16 + [False]*2 + [True]*3 + [False] + [True]*2 + [False] + [True] + [False]*8 + [True]*3 + \
+               [False] + [True]*2 + [False] + [True] + [False]*8 + [True]*(len(col)-52)
 
     res_sk = feature_selection.mutual_info_classif(x, y, discrete_features=discrete)
 
@@ -29,10 +29,10 @@ def information_gain(n):
 
     keep = ['Label', 'Post_ID'] + list(rdf['Feature'].values[0:n])
 
-    tp = pd.read_csv("dataset/features_large2.csv", iterator=True, chunksize=1000)
+    tp = pd.read_csv("dataset/features.csv", iterator=True, chunksize=1000)
     df = pd.concat(tp, ignore_index=True)
 
-    df.loc[:, df.columns.isin(keep)].to_csv("dataset/final_feature_vectors.csv",  index=False)
+    df.loc[:, df.columns.isin(keep)].to_csv("dataset/final_feature_vectors_80.csv",  index=False)
 
 
-information_gain(40)
+information_gain(80)
