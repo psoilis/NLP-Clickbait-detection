@@ -1,16 +1,15 @@
-from sklearn import svm
-from sklearn.metrics import recall_score
-from sklearn.metrics import precision_score
-from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import cross_val_score
+from sklearn.linear_model import LogisticRegression
 
 
-class SVM:
+class MaximumEntropy:
 
     model = None
 
     def __init__(self):
-        self.model = svm.SVC(kernel='linear', gamma='scale')
+        self.model = LogisticRegression(random_state=0,
+                                        solver='lbfgs',
+                                        multi_class='multinomial')
 
     def train(self, training_data, labels):
         self.model = self.model.fit(training_data, labels)
