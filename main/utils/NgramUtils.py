@@ -29,7 +29,7 @@ def get_ngram_corpus(n, lower_t, upper_t):
 
     ng = {k: 0 for k, v in counts.items() if v > lower_t and not v >= upper_t}
 
-    pd.DataFrame(counts.items(), columns=['gram', 'count']).to_csv("../dataset/"+n+"-gram_frequencies.csv", index=False)
+    pd.DataFrame(counts.items(), columns=['gram', 'count']).to_csv("dataset/"+str(n)+"-gram_frequencies.csv", index=False)
 
     return ng
 

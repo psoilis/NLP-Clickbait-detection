@@ -152,8 +152,7 @@ def get_ratio_features_list(lst):
 def get_det_poses(comp):
 
     # TODO: modular? or for all example for title bellow
-    if comp == "title":
-        return utils.determiners_possessives_bool(comp)
+    return utils.determiners_possessives_bool(comp)
 
 
 def get_common_clickbait_phrases_feature(post):
@@ -223,15 +222,15 @@ def has_slang_words(post_field):
     return found
 
 
-def get_title_patterns(post):
-    return utils.article_title_patterns(utils.article(post))
+def get_title_patterns(comp):
+    return utils.article_title_patterns(comp)
 
 
 def get_POS_counts(comp):
     return utils.POS_counts(comp)
 
 
-def get_ngram_counts(post, n, threshold):
+def get_ngram_counts(post, n, l_t, u_t):
     """
     :arg: post => the post that we want to extract the features from
     :arg: n => the n in n-gram
@@ -239,6 +238,6 @@ def get_ngram_counts(post, n, threshold):
     :return: the n gram feature vector of the post
     """
     if not ngram_corpus[n]:
-        ngram_corpus[n] = NgramUtils.get_ngram_corpus(n, threshold).copy()
+        ngram_corpus[n] = NgramUtils.get_ngram_corpus(n, l_t, u_t).copy()
 
     return NgramUtils.get_ngram_feature_vector(post, n, ngram_corpus[n])
