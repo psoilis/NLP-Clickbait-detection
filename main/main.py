@@ -202,12 +202,15 @@ def plot_ngram_distribution():
 
 
 if __name__ == '__main__':
-    # plot_ngram_distribution()
+
+    #plot_ngram_distribution()
     main()
 
 import pandas as pd
 from classification import NaiveBayes
 from classification import MaximumEntropy
+from classification import RandomForest
+from classification import XGBoost as xgb
 
 files = [
     # "final_feature_vectors_20.csv",
@@ -222,6 +225,8 @@ files = [
 
 me = MaximumEntropy.MaximumEntropy()
 nb = NaiveBayes.NaiveBayes()
+rf = RandomForest.RandomForest()
+xg = xgb.XGBoost()
 
 for file in files:
     df = pd.read_csv("dataset/" + file)
@@ -240,6 +245,10 @@ for file in files:
     # rf.train(X, y)
     # print(rf.cross_validation(X, y))
 
+    rf.train(X, y)
+
+    xg.train(X, y)
+
 
 df = pd.read_csv("dataset/leftout_test.csv")
 X = df.loc[:, ~df.columns.isin(['Label', 'Post_ID'])].values
@@ -247,3 +256,5 @@ y = df['Label'].values
 
 print(nb.predict(X, y, True))
 print(me.predict(X, y, True))
+print(rf.predict(X, y, True))
+print(xg.predict(X, y, True))
