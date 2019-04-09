@@ -2,7 +2,7 @@ import numpy as np
 from sklearn import metrics
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold
-
+from sklearn.model_selection import GridSearchCV
 from utils import confusion_matrix_pretty_print
 
 
@@ -11,9 +11,7 @@ class MaximumEntropy:
     model = None
 
     def __init__(self):
-        self.model = LogisticRegression(random_state=0,
-                                        solver='lbfgs',
-                                        multi_class='multinomial')
+        self.model = LogisticRegression(solver='liblinear', C=1, penalty="l2")
 
     def train(self, training_data, labels):
         self.model = self.model.fit(training_data, labels)
@@ -21,7 +19,7 @@ class MaximumEntropy:
     def predict(self, data, test_labels, plot_conf=False):
         pred_labels = self.model.predict(data)
 
-        print(metrics.confusion_matrix(test_labels, pred_labels))
+        # print(metrics.confusion_matrix(test_labels, pred_labels))
         if plot_conf:
             confusion_matrix_pretty_print.plot_confusion_matrix_from_data(test_labels, pred_labels)
 
@@ -69,3 +67,16 @@ class MaximumEntropy:
             "f1": np.mean(f1s)
         }
         return evaluation
+
+    def optimize_params(self, train_data, train_labels):
+        grid = {
+            "solver": ["liblinear", "lbfgs"],
+            "C": [100, 10, 1, 0.1, 0.01, 0.001, 0.0001],
+            "penalty": ["l2"]  # l2 ridge
+        }
+        logreg = LogisticRegression()
+        logreg_cv = GridSearchCV(logreg, grid, cv=10)
+        logreg_cv.fit(train_data, train_labels)
+
+        print("tuned hyper parameters :(best parameters) ", logreg_cv.best_params_)
+        print("accuracy :", logreg_cv.best_score_)
