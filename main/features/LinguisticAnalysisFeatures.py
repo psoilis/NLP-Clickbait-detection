@@ -61,7 +61,6 @@ def get_diff_between_no_of_characters_features(post):
     return features_lst
 
 
-# TODO: Should we include the other way around?
 def get_no_of_characters_ratio_features(post):
     """
     Calculates the "Number of characters ratio". 21 features
@@ -109,7 +108,6 @@ def get_diff_between_no_of_words_features(post):
     return features_lst
 
 
-# TODO: Should we include the other way around?
 def get_no_of_words_ratio_features(post):
     """
     Calculates the "Number of words ratio". 21 features
@@ -125,34 +123,6 @@ def get_no_of_words_ratio_features(post):
 
     features_lst = get_ratio_features_list(lst)
     return features_lst
-
-
-def get_difference_features_list(lst):
-    features_lst = []
-    for i in range(len(lst)):
-        for j in range(i + 1, len(lst)):
-            if lst[i] != -1 and lst[j] != -1:
-                features_lst.append(abs(lst[i] - lst[j]))
-            else:
-                features_lst.append(-1)
-    return features_lst
-
-
-def get_ratio_features_list(lst):
-    features_lst = []
-    for i in range(len(lst)):
-        for j in range(i + 1, len(lst)):
-            if lst[i] != -1 and lst[j] != -1:
-                features_lst.append(abs(float(lst[i]) / lst[j]))
-            else:
-                features_lst.append(-1)
-    return features_lst
-
-
-def get_det_poses(comp):
-
-    # TODO: modular? or for all example for title bellow
-    return utils.determiners_possessives_bool(comp)
 
 
 def get_common_clickbait_phrases_feature(post):
@@ -222,14 +192,6 @@ def has_slang_words(post_field):
     return found
 
 
-def get_title_patterns(comp):
-    return utils.article_title_patterns(comp)
-
-
-def get_POS_counts(comp):
-    return utils.POS_counts(comp)
-
-
 def get_ngram_counts(post, n, l_t, u_t):
     """
     :arg: post => the post that we want to extract the features from
@@ -241,3 +203,37 @@ def get_ngram_counts(post, n, l_t, u_t):
         ngram_corpus[n] = NgramUtils.get_ngram_corpus(n, l_t, u_t).copy()
 
     return NgramUtils.get_ngram_feature_vector(post, n, ngram_corpus[n])
+
+
+def get_title_patterns(comp):
+    return utils.article_title_patterns(comp)
+
+
+def get_POS_counts(comp):
+    return utils.POS_counts(comp)
+
+
+def get_difference_features_list(lst):
+    features_lst = []
+    for i in range(len(lst)):
+        for j in range(i + 1, len(lst)):
+            if lst[i] != -1 and lst[j] != -1:
+                features_lst.append(abs(lst[i] - lst[j]))
+            else:
+                features_lst.append(-1)
+    return features_lst
+
+
+def get_ratio_features_list(lst):
+    features_lst = []
+    for i in range(len(lst)):
+        for j in range(i + 1, len(lst)):
+            if lst[i] != -1 and lst[j] != -1:
+                features_lst.append(abs(float(lst[i]) / lst[j]))
+            else:
+                features_lst.append(-1)
+    return features_lst
+
+
+def get_det_poses(comp):
+    return utils.determiners_possessives_bool(comp)

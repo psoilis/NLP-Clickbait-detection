@@ -19,7 +19,7 @@ class RandomForest:
     def predict(self, data, test_labels, plot_conf=False):
         pred_labels = self.rdmf.predict(data)
 
-        print(metrics.confusion_matrix(test_labels, pred_labels))
+        # print(metrics.confusion_matrix(test_labels, pred_labels))
         if plot_conf:
             confusion_matrix_pretty_print.plot_confusion_matrix_from_data(test_labels, pred_labels)
 
