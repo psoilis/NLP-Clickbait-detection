@@ -367,20 +367,42 @@ from classification import NaiveBayes
 from classification import MaximumEntropy
 from classification import RandomForest
 
-# df = pd.read_csv("dataset/final_feature_vectors.csv")
-# X = df.loc[:, ~df.columns.isin(['Label', 'Post_ID'])].values
-# y = df['Label'].values
 
-# nb = NaiveBayes.NaiveBayes()
-# nb.train(X, y)
-# results = nb.cross_validation(X, y)
-# print(results)
+files = [
+    # "final_feature_vectors_20.csv",
+    # "final_feature_vectors_40.csv",
+    # "final_feature_vectors_60.csv",
+    # "final_feature_vectors_80.csv",
+    # "final_feature_vectors_120.csv",
+    "final_feature_vectors_160.csv",
+    # "final_feature_vectors_200.csv",
+    # "features_no_ngrams.csv",
+]
 
-# svm = MaximumEntropy.MaximumEntropy()
-# svm.train(X, y)
-# print(svm.cross_validation(X, y))
+me = MaximumEntropy.MaximumEntropy()
+nb = NaiveBayes.NaiveBayes()
 
-# rf = RandomForest.RandomForest()
-# rf.train(X, y)
-# print(rf.cross_validation(X, y))
+for file in files:
+    df = pd.read_csv("dataset/" + file)
+    X = df.loc[:, ~df.columns.isin(['Label', 'Post_ID'])].values
+    y = df['Label'].values
 
+    nb.train(X, y)
+    # results = nb.cross_validation(X, y)
+    # print(results)
+
+    me.train(X, y)
+    # print(svm.cross_validation(X, y))
+    # svm.optimize_params(X, y)
+
+    # rf = RandomForest.RandomForest()
+    # rf.train(X, y)
+    # print(rf.cross_validation(X, y))
+
+
+df = pd.read_csv("dataset/leftout_test.csv")
+X = df.loc[:, ~df.columns.isin(['Label', 'Post_ID'])].values
+y = df['Label'].values
+
+print(nb.predict(X, y, True))
+print(me.predict(X, y, True))
