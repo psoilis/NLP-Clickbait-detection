@@ -1,5 +1,4 @@
 from nltk import word_tokenize, pos_tag
-from collections import Counter
 import json_lines
 
 
@@ -112,105 +111,6 @@ def words(content):
     return words_lst
 
 
-def determiners_possessives_bool(content):
-
-    text = ""
-
-    if isinstance(content, list):
-        for t in content:
-            text += t + " "
-    else:
-        text = content
-
-    tagged_tokens = pos_tag(word_tokenize(text.lower()))
-
-    d_flag = 0
-    p_flag = 0
-
-    for t in tagged_tokens:
-
-        if d_flag and p_flag:
-            # Early termination
-            break
-
-        if t[1] == "DT":
-            # determiner
-            d_flag = 1
-        elif t[1] == "PRP$" or t[1] == "PRP":
-            # possessives
-            p_flag = 1
-
-    return d_flag, p_flag
-
-
-def article_title_patterns(content):
-
-    text = ""
-
-    if isinstance(content, list):
-        for t in content:
-            text += t + " "
-    else:
-        text = content
-
-    tagged_tokens = pos_tag(word_tokenize(text.lower()))
-
-    if len(tagged_tokens) == 0:
-        return False, False
-
-    if tagged_tokens[0][1] != "CD":
-        return False, False
-
-    nnpv = False
-    nnpt = False
-
-    np = False
-
-    for i in range(1, len(tagged_tokens)):
-
-        if "NN" in tagged_tokens[i][1]:
-            np = True
-
-        if tagged_tokens[i][1] not in "NN" and not np:
-            return False, False
-
-        if tagged_tokens[i][1] in "VB" and np:
-            nnpv = True
-
-        if tagged_tokens[i][0] == "that" and np:
-            nnpt = True
-
-    return nnpv, nnpt
-
-
-def POS_counts(content):
-
-    text = ""
-
-    if isinstance(content, list):
-        for t in content:
-            text += t + " "
-    else:
-        text = content
-
-    cdict = {"NNP": 0, "IN": 0, "WRB": 0, "NN": 0, "PRP": 0, "VBZ": 0, "PRP$": 0, "VBD": 0, "VBP": 0,
-             "WP": 0, "DT": 0, "POS": 0, "WDT": 0, "RB": 0, "RBS": 0, "VBN": 0}
-
-    for t in text.split(" "):
-
-        tag = pos_tag(word_tokenize(t))
-
-        if len(tag) != 0:
-
-            if tag[0][1] in cdict.keys():
-                cdict[tag[0][1]] += 1
-            elif tag[0][1] == "NNPS":
-                cdict["NNP"] += 1
-            elif tag[0][1] == "NNS":
-                cdict["NN"] += 1
-
-    return cdict
-
 def get_label_dict():
     labels = {}
     with open('dataset/truth.jsonl', 'rb') as label_file:
@@ -220,3 +120,152 @@ def get_label_dict():
             elif truth_label(data) == 'clickbait':
                 labels[post_id(data)] = 1
     return labels
+
+
+def determiners_possessives_bool(content):
+    """
+    Function that determines if possessives and determiners exist in the specified content
+
+    :arg content: The content element that we check
+
+    :return d_flag: 1 if determiners exist returns 0 otherwise
+    :return p_flag: 1 if possessives exist returns 0 otherwise
+    """
+
+    # Check if the content element is a list or a string and append it to the variable text as String
+    text = ""
+
+    if isinstance(content, list):
+        for t in content:
+            text += t + " "
+    else:
+        text = content
+
+    # Get the string's POS tags
+    tagged_tokens = pos_tag(word_tokenize(text.lower()))
+
+    # Initialize the tags
+    d_flag = 0
+    p_flag = 0
+
+    # For very POS tag
+    for t in tagged_tokens:
+
+        # If both flags are 1 then break for early termination
+        if (d_flag + p_flag) == 2:
+            break
+
+        # If the token is tagged as a determiner set the determiner flag to 1
+        if t[1] == "DT":
+            d_flag = 1
+        # If the token is tagged as a possessive set the possessive flag to 1
+        elif t[1] == "PRP$" or t[1] == "PRP":
+            p_flag = 1
+
+    # Return both flags
+    return d_flag, p_flag
+
+
+def article_title_patterns(content):
+    """
+    Function that checks if the following patterns exist in our content element
+    Pattern 1: Number + Noun Phrase + Verb
+    Pattern 2: Number + Noun Phrase + the word "that"
+
+    :arg content: The content element that we check
+
+    :return nnpv: 1 if Pattern 1 exists returns 0 otherwise
+    :return nnpt: 1 if Pattern 2 exists returns 0 otherwise
+    """
+
+    # Check if the content element is a list or a string and append it to the variable text as String
+    text = ""
+
+    if isinstance(content, list):
+        for t in content:
+            text += t + " "
+    else:
+        text = content
+
+    # Get the string's POS tags
+    tagged_tokens = pos_tag(word_tokenize(text.lower()))
+
+    # If we get an empty list return False on both flags
+    if len(tagged_tokens) == 0:
+        return False, False
+
+    # If the pattern doesn't starat with a number return False on both flags
+    if tagged_tokens[0][1] != "CD":
+        return False, False
+
+    # Initialize the flags
+    nnpv = False
+    nnpt = False
+
+    # If the Noun phrase has occurred
+    np = False
+
+    # For every token
+    for i in range(1, len(tagged_tokens)):
+
+        # If we encounter the noun in the phrase
+        if "NN" in tagged_tokens[i][1]:
+            np = True
+        # If we don't encounter the noun in the phrase and it wasn't found previously
+        if tagged_tokens[i][1] not in "NN" and not np:
+            return False, False
+
+        # If we encounter the verb
+        if tagged_tokens[i][1] in "VB" and np:
+            nnpv = True
+
+        # If we encounter the word "that"
+        if tagged_tokens[i][0] == "that" and np:
+            nnpt = True
+
+    # Return both flags
+    return nnpv, nnpt
+
+
+def POS_counts(content):
+    """
+    Function that returns the POS tag count of the specified content element
+
+    :arg content: The content element that we check
+
+    :return cdict : The dictionary that contains the counts
+    """
+
+    # Check if the content element is a list or a string and append it to the variable text as String
+    text = ""
+
+    if isinstance(content, list):
+        for t in content:
+            text += t + " "
+    else:
+        text = content
+
+    # Initialize the dictionary with only the relevant POS tags with 0 values
+    cdict = {"NNP": 0, "IN": 0, "WRB": 0, "NN": 0, "PRP": 0, "VBZ": 0, "PRP$": 0, "VBD": 0, "VBP": 0,
+             "WP": 0, "DT": 0, "POS": 0, "WDT": 0, "RB": 0, "RBS": 0, "VBN": 0}
+
+    # For every token
+    for t in text.split(" "):
+
+        # Get the token's tag
+        tag = pos_tag(word_tokenize(t))
+
+        # If the list wasn't empty
+        if len(tag) != 0:
+
+            # Increment the dictionary
+            if tag[0][1] in cdict.keys():
+                cdict[tag[0][1]] += 1
+            # Add the plurals to the normal count
+            elif tag[0][1] == "NNPS":
+                cdict["NNP"] += 1
+            elif tag[0][1] == "NNS":
+                cdict["NN"] += 1
+
+    # Return the dictionary with the POS tag counts
+    return cdict

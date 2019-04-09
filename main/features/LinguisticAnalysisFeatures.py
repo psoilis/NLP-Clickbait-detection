@@ -1,6 +1,7 @@
 import re
 from utils import utils, NgramUtils
 
+# List of common clickbait phrases
 clickbait_phrases = ["A Single", "Absolutely", "Amazing", "Awesome", "Best", "Breathtaking",
                      "But what happened next", "Can change your life", "Can't Even Handle",
                      "Can't Handle", "Cannot Even Handle", "Doesn't want you to see", "Epic",
@@ -17,17 +18,20 @@ clickbait_phrases = ["A Single", "Absolutely", "Amazing", "Awesome", "Best", "Br
                      "You Didn’t Know Exist", "You Didn’t Know Existed", "You Won't Believe", "You Won’t Believe",
                      "You Wont Believe", "Have To See To Believe"]
 
+# List of slang words
 slang_words = ["3cool5u", "420", "afaik", "afk", "asl", "atm", "atw", "ayy", "bae", "bb", "bbiab", "bbl", "bbs",
-                "bc", "bf", "bff", "bork", "brb", "btw", "cba", "convo", "cp", "cya", "dank", "dc", "dem feels", "dw",
-                "e2e", "fml", "FOMO", "FTFY", "ftl", "ftw", "fwiw", "fyi", "g2g", "g4u", "gf", "gg", "goml", "gr8", "gratz",
-                "gtfo", "guiz", "hbu", "hru", "ianadb", "ianalb", "ianap", "idc", "idgaf", "idk", "iirc", "ik", "ikr", "ily",
-                "inb4", "irl", "jfc", "jk", "John Cena", "JOHN CENA", "js", "k", "kappa", "kek", "kms", "kthx", "l8r", "leet",
-                "lmao", "lmk", "lol", "LPT", "lrl", "lrn2", "m8", "maga", "mfw", "mrw", "nerf", "ngl", "nm", "nmu", "noob",
-                "nu", "nvm", "ofc", "omf", "omg", "omw", "ooc", "op", "OP", "orly", "pepe", "pleb", "pleb tier", "plz", "pron",
-                "pwned", "REEEEEEEE", "rekt", "rickroll", "rip", "rly", "rms", "rofl", "rotflol", "rtfm", "rude", "shank", "smd",
-                "smh", "soz", "swag", "tbf", "tbh", "tbt", "TIFU", "tf", "tfw", "thx", "tide", "TIL", "tl;dr", "tmw", "tolo",
-                "topkek", "ty", "uwotm8", "w00t", "wb", "wot", "wtb", "wtf", "wtg", "wts", "wuu2", "yarly", "ymmv", "yolo", "yw"]
+               "bc", "bf", "bff", "bork", "brb", "btw", "cba", "convo", "cp", "cya", "dank", "dc", "dem feels", "dw",
+               "e2e", "fml", "FOMO", "FTFY", "ftl", "ftw", "fwiw", "fyi", "g2g", "g4u", "gf", "gg", "goml", "gr8",
+               "gratz", "gtfo", "guiz", "hbu", "hru", "ianadb", "ianalb", "ianap", "idc", "idgaf", "idk", "iirc", "ik",
+               "ikr", "ily", "inb4", "irl", "jfc", "jk", "John Cena", "JOHN CENA", "js", "k", "kappa", "kek", "kms",
+               "kthx", "l8r", "leet", "lmao", "lmk", "lol", "LPT", "lrl", "lrn2", "m8", "maga", "mfw", "mrw", "nerf",
+               "ngl", "nm", "nmu", "noob", "nu", "nvm", "ofc", "omf", "omg", "omw", "ooc", "op", "OP", "orly", "pepe",
+               "pleb", "pleb tier", "plz", "pron", "pwned", "REEEEEEEE", "rekt", "rickroll", "rip", "rly", "rms",
+               "rofl", "rotflol", "rtfm", "rude", "shank", "smd", "smh", "soz", "swag", "tbf", "tbh", "tbt", "TIFU",
+               "tf", "tfw", "thx", "tide", "TIL", "tl;dr", "tmw", "tolo", "topkek", "ty", "uwotm8", "w00t", "wb",
+               "wot", "wtb", "wtf", "wtg", "wts", "wuu2", "yarly", "ymmv", "yolo", "yw"]
 
+# Dictionary containing the initialized to zero n-gram feature vectors for n in [1,3]
 ngram_corpus = {1: {}, 2: {}, 3: {}}
 
 
@@ -194,23 +198,47 @@ def has_slang_words(post_field):
 
 def get_ngram_counts(post, n, l_t, u_t):
     """
-    :arg: post => the post that we want to extract the features from
-    :arg: n => the n in n-gram
     Calculates the ngram features of the post
+
+    :arg post: The post that we want to extract the features from
+    :arg n: The n in n-gram
+    :arg l_t: The lower threshold that removes n-grams with lower counts than the threshold in the dataset
+    :arg u_t: The upper threshold that removes n-grams with higher counts than the threshold  in the dataset
+
     :return: the n gram feature vector of the post
     """
+    # If the n-gram corpus hasn't benn yet initialized initialize it
     if not ngram_corpus[n]:
         ngram_corpus[n] = NgramUtils.get_ngram_corpus(n, l_t, u_t).copy()
 
+    # Return the n-gram feature vector of the post
     return NgramUtils.get_ngram_feature_vector(post, n, ngram_corpus[n])
 
 
 def get_title_patterns(comp):
+    """
+    Function that checks if the following patterns exist in our content element
+    Pattern 1: Number + Noun Phrase + Verb
+    Pattern 2: Number + Noun Phrase + the word "that"
+    (check utils.py for additional information)
+    """
     return utils.article_title_patterns(comp)
 
 
 def get_POS_counts(comp):
+    """
+    Function that returns the POS tag count of the specified content element
+    (check utils.py for additional information)
+    """
     return utils.POS_counts(comp)
+
+
+def get_det_poses(comp):
+    """
+    Function that determines if possessives and determiners exist in the specified content
+    (check utils.py for additional information)
+    """
+    return utils.determiners_possessives_bool(comp)
 
 
 def get_difference_features_list(lst):
@@ -233,7 +261,3 @@ def get_ratio_features_list(lst):
             else:
                 features_lst.append(-1)
     return features_lst
-
-
-def get_det_poses(comp):
-    return utils.determiners_possessives_bool(comp)
