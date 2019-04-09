@@ -2,7 +2,7 @@ import numpy as np
 from sklearn import metrics
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import StratifiedKFold
-
+from sklearn.model_selection import GridSearchCV
 from utils import confusion_matrix_pretty_print
 
 
@@ -11,11 +11,7 @@ class RandomForest:
     rdmf = None
 
     def __init__(self):
-        self.rdmf = RandomForestClassifier(n_estimators=100, criterion="entropy", max_depth=10, min_samples_split=2,
-                                           min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features="auto",
-                                           max_leaf_nodes=None, min_impurity_decrease=0.0, min_impurity_split=None,
-                                           bootstrap=True, oob_score=False, n_jobs=None, random_state=None, verbose=0,
-                                           warm_start=False, class_weight=None)
+        self.rdmf = RandomForestClassifier(n_estimators=500, max_depth=30, bootstrap=False)
 
     def train(self, training_data, labels):
         self.rdmf = self.rdmf.fit(training_data, labels)
@@ -71,3 +67,19 @@ class RandomForest:
             "f1": np.mean(f1s)
         }
         return evaluation
+
+    def hyper_parameter_tuning(self, train_data, train_labels):
+
+        parameters = {'n_estimators': [100, 200, 300, 400, 500, 1000],
+                      'max_depth': [20, 30, 40, 50, 60],
+                      'min_samples_split': [2, 4, 6],
+                      'min_samples_leaf': [1, 2, 4],
+                      'bootstrap': [True, False]}
+
+        rdfc = RandomForestClassifier(n_estimators=500, max_depth=30, bootstrap=False)
+        clf = GridSearchCV(rdfc, parameters, cv=10)
+        print("Starting to fit data")
+        clf.fit(train_data, train_labels)
+
+        print("Params: ", clf.best_params_)
+        print("Score: ", clf.best_score_)

@@ -1,9 +1,9 @@
-import pandas as pd
 import xgboost as xgb
-from sklearn.metrics import accuracy_score, confusion_matrix
-from sklearn.model_selection import KFold
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import train_test_split
+from sklearn import metrics
+from sklearn.model_selection import StratifiedKFold
+from utils import confusion_matrix_pretty_print
+import numpy as np
+from sklearn.model_selection import GridSearchCV
 
 
 class XGBoost:
@@ -11,45 +11,80 @@ class XGBoost:
     xg_clf = None
     params = None
 
-    def __init__(self, obj, cb, lr, md, a, n, em):
-        self.params = {"objective": obj, 'colsample_bytree': cb, 'learning_rate': lr, 'max_depth': md,
-                       'alpha': a, 'n_esteimators': n, 'eval_metric': em}
-        self. xg_clf  = xgb.XGBClassifier(params=self.params)
+    def __init__(self):
+        self.params = {"objective: binary:hinge"}
+        self. xg_clf = xgb.XGBClassifier(params=self.params)
 
     def train(self, x_train, y_train):
         self.xg_clf.fit(x_train, y_train)
 
-    def predict(self, x_test):
-        return self.xg_clf.predict(x_test)
+    def predict(self, data, test_labels, plot_conf=False):
 
-    def cross_validation(self, data_dmatrix, metric, folds):
-        cv_results = xgb.cv(dtrain=data_dmatrix, params=self.params, nfold=folds,
-                            num_boost_round=50, early_stopping_rounds=10, metrics=metric, as_pandas=True, seed=123)
-        # metric could be rmse
-        cv_results.head()
+        pred_labels = self.xg_clf.predict(data)
 
+        print(metrics.confusion_matrix(test_labels, pred_labels))
+        if plot_conf:
+            confusion_matrix_pretty_print.plot_confusion_matrix_from_data(test_labels, pred_labels)
 
-df = pd.read_csv("../../dataset/features_panos.csv")
-X = df.loc[:, ~df.columns.isin(['Label', 'Post_ID'])].values
-Y = df['Label'].values
+        accuracy = metrics.accuracy_score(test_labels, pred_labels)
+        precision = metrics.precision_score(test_labels, pred_labels, labels=[0, 1], average="binary")
+        recall = metrics.recall_score(test_labels, pred_labels, labels=[0, 1], average="binary")
+        auc = metrics.roc_auc_score(test_labels, pred_labels)
+        f1 = metrics.f1_score(test_labels, pred_labels)
 
-seed = 7
-test_size = 0.3
-X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=test_size, random_state=seed)
+        evaluation = {
+            "accuracy": accuracy,
+            "precision": precision,
+            "recall": recall,
+            "auc": auc,
+            "f1": f1
+        }
+        return evaluation
 
-xgbc = XGBoost('binary:hinge', 0.5, 0.3, 10, 15, 300, 'error')
+    def cross_validation(self, data, labels):
 
-xgbc.xg_clf.fit(X_train, y_train)
+        kf = StratifiedKFold(n_splits=10)
+        recalls = []
+        precisions = []
+        accuracies = []
+        aucs = []
+        f1s = []
+        for train_index, test_index in kf.split(data, labels):
+            train_set, test_set = data[train_index], data[test_index]
+            train_labels, test_labels = labels[train_index], labels[test_index]
 
-y_pred = xgbc.xg_clf.predict(X_test)
-predictions = [round(value) for value in y_pred]
+            self.train(train_set, train_labels)
+            classif_metrics = self.predict(test_set, test_labels)
 
-accuracy = accuracy_score(y_test, predictions)
-print("Accuracy: %.2f%%" % (accuracy * 100.0))
+            accuracies.append(classif_metrics["accuracy"])
+            precisions.append(classif_metrics["precision"])
+            recalls.append(classif_metrics["recall"])
+            aucs.append(classif_metrics["auc"])
+            f1s.append(classif_metrics["f1"])
 
-cm = confusion_matrix(y_test, predictions)
-print(cm)
+        evaluation = {
+            "accuracy": np.mean(accuracies),
+            "precision": np.mean(precisions),
+            "recall": np.mean(recalls),
+            "auc": np.mean(aucs),
+            "f1": np.mean(f1s)
+        }
+        return evaluation
 
-kfold = KFold(n_splits=10, random_state=7)
-results = cross_val_score(xgbc.xg_clf, X, Y, cv=kfold)
-print("Accuracy: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+    def hyper_parameter_tuning(self, train_data, train_labels):
+
+        parameters = {'n_estimators': [100, 200, 300],
+                      'eta': [0.05, 0.1, 0.2, 0.3],
+                      'gamma': [i/10.0 for i in range(0, 5)],
+                      'reg_lambda': [1e-5, 1e-2, 0.1, 1, 100],
+                      'max_depth': [4, 5, 6],
+                      'min_child_weight': [4, 5, 6]
+                      }
+
+        c = xgb.XGBClassifier(objective='binary:hinge')
+        clf = GridSearchCV(c, cv=10, param_grid=parameters)
+        print("Starting to fit data")
+        clf.fit(train_data, train_labels)
+
+        print("Params: ", clf.best_params_)
+        print("Score: ", clf.best_score_)
