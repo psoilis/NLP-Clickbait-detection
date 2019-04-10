@@ -8,7 +8,7 @@ from sklearn.model_selection import GridSearchCV
 
 class XGBoost:
     """
-    Class containing the functionality of our custom XGBoost classifier
+    Class containing the functionality of the XGBoost classifier
     """
 
     xg_clf = None  # The classifier object
@@ -108,7 +108,7 @@ class XGBoost:
         # Return the metrics
         return evaluation
 
-    def hyper_parameter_tuning(self, data, labels):
+    def optimize_hyperparams(self, data, labels):
         """
         Function that does the hyper-parameter tuning
 

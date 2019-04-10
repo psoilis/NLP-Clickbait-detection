@@ -7,15 +7,37 @@ from utils import confusion_matrix_pretty_print
 
 
 class NaiveBayes:
+    """
+    Class containing the functionality of the MaximumEntropy classifier
+    """
+
     gnb = None
 
     def __init__(self):
+        """
+        The class constructor with the optimal hyper-parameters
+        """
         self.gnb = GaussianNB(priors=[0.76, 0.24])
 
     def train(self, training_data, labels):
+        """
+        Function that trains the classifier
+
+        :arg training_data: Training feature vectors
+        :arg labels: Training labels
+         """
         self.gnb = self.gnb.fit(training_data, labels)
 
     def predict(self, data, test_labels, plot_conf=False):
+        """
+        Function that predicts the labels of test data
+
+        :arg data: The feature vectors that we want to classify
+        :arg test_labels: Their original labels for error calculation
+        :arg plot_conf: True if we want to plot the confusion matrix
+
+        :returns: the metrics of the prediction process
+        """
         pred_labels = self.gnb.predict(data)
 
         # print(metrics.confusion_matrix(test_labels, pred_labels))
@@ -38,7 +60,14 @@ class NaiveBayes:
         return evaluation
 
     def cross_validation(self, data, labels):
+        """
+        Function that does stratified k-fold cross validation for better error estimation
 
+        :arg data: The feature vectors that we want to classify
+        :arg labels: Their original labels
+
+        :returns: the metrics of the cross validation process
+        """
         kf = StratifiedKFold(n_splits=10)
         recalls = []
         precisions = []

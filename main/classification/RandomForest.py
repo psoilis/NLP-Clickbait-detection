@@ -8,7 +8,7 @@ from utils import confusion_matrix_pretty_print
 
 class RandomForest:
     """
-    Class containing the functionality of our custom RandomForest classifier
+    Class containing the functionality of the RandomForest classifier
     """
 
     rdmf = None  # The classifier object
@@ -109,7 +109,7 @@ class RandomForest:
         return evaluation
 
 
-    def hyper_parameter_tuning(self, data, labels):
+    def optimize_hyperparams(self, data, labels):
         """
         Function that does the hyper-parameter tuning
 
