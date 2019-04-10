@@ -186,7 +186,6 @@ def has_slang_words(post_field):
     # If list extract the element into a string
     if isinstance(post_field, list):
         post_field = post_field[0]
-    post_field = post_field.casefold()
     found = 0
     for phrase in slang_words:
         result = re.search(r'\b' + phrase + '\W', post_field)
