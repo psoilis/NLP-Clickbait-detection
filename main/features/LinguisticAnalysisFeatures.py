@@ -37,7 +37,7 @@ ngram_corpus = {1: {}, 2: {}, 3: {}}
 
 def get_no_of_characters_features(post):
     """
-    Calculates the "Number of characters" features. 7 features
+    Calculates the "Number of characters" features. 4 features
     are calculated in total
     :return: a list that contains the features
     """
@@ -51,7 +51,7 @@ def get_no_of_characters_features(post):
 def get_diff_between_no_of_characters_features(post):
     """
     Calculates the "Difference between number of chars" features.
-    21 features are calculated in total
+    6 features are calculated in total
     :return: a list that contains the features
     """
     post_title_len = utils.len_characters(utils.title(post))
@@ -67,7 +67,7 @@ def get_diff_between_no_of_characters_features(post):
 
 def get_no_of_characters_ratio_features(post):
     """
-    Calculates the "Number of characters ratio". 21 features
+    Calculates the "Number of characters ratio". 6 features
     are calculated in total
     :return: a list that contains the features
     """
@@ -84,7 +84,7 @@ def get_no_of_characters_ratio_features(post):
 
 def get_no_of_words_features(post):
     """
-    Calculates the "Number of words" features. 7 features
+    Calculates the "Number of words" features. 4 features
     are calculated in total
     :return: a list that contains the features
     """
@@ -98,7 +98,7 @@ def get_no_of_words_features(post):
 def get_diff_between_no_of_words_features(post):
     """
     Calculates the "Difference between number of words" features.
-    21 features are calculated in total
+    6 features are calculated in total
     :return: a list that contains the features
     """
     post_title_len = utils.len_words(utils.title(post))
@@ -114,7 +114,7 @@ def get_diff_between_no_of_words_features(post):
 
 def get_no_of_words_ratio_features(post):
     """
-    Calculates the "Number of words ratio". 21 features
+    Calculates the "Number of words ratio". 6 features
     are calculated in total
     :return: a list that contains the features
     """
